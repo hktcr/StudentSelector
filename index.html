@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bänkväljare — Slumpa bänknummer</title>
+    <meta name="description"
+        content="GDPR-säkert verktyg för att slumpa bänknummer i klassrummet. Anonymiserat, rättvist och roligt!">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #16161e;
+            --bg-card-hover: #1e1e2a;
+            --accent-primary: #6366f1;
+            --accent-secondary: #a855f7;
+            --accent-success: #22c55e;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --gradient-accent: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --gradient-gold: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(-20px, 20px) rotate(1deg);
+            }
+
+            66% {
+                transform: translate(20px, -20px) rotate(-1deg);
+            }
+        }
+
+        .header {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 900;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .settings-panel {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 1.25rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .card-header .icon {
+            font-size: 1.25rem;
+        }
+
+        .setup-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .setup-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 0.6rem 0.75rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 0.5rem 0.4rem;
+            background: var(--glass-bg);
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .mode-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .mode-btn .mode-icon {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .selected-display {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selected-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+        }
+
+        .selected-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .selected-desk {
+            font-size: clamp(4rem, 12vw, 7rem);
+            font-weight: 900;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .selected-desk.spinning {
+            animation: deskSpin 0.15s ease-in-out;
+        }
+
+        @keyframes deskSpin {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+        }
+
+        .selected-desk.golden {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .random-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.25rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .random-btn:active {
+            transform: scale(0.98);
+        }
+
+        .classroom-layout {
+            display: grid;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+            position: relative;
+        }
+
+        .classroom-layout::before {
+            content: '📺 TAVLA';
+            position: absolute;
+            top: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .classroom-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .desk-cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .desk-cell:hover {
+            background: var(--bg-card-hover);
+            transform: scale(1.05);
+        }
+
+        .desk-cell.selected {
+            background: rgba(99, 102, 241, 0.4);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+            animation: deskPulse 0.5s ease-out;
+        }
+
+        @keyframes deskPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .desk-cell.maxed {
+            background: var(--gradient-gold);
+            border-color: #f59e0b;
+            color: #000;
+        }
+
+        .desk-cell.spinning-preview {
+            background: rgba(168, 85, 247, 0.4);
+            border-color: var(--accent-secondary);
+        }
+
+        .desk-cell.empty {
+            background: transparent;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            opacity: 0.3;
+        }
+
+        .desk-stars {
+            font-size: 0.55rem;
+            color: #fbbf24;
+            margin-top: 1px;
+        }
+
+        .desk-cell.maxed .desk-stars {
+            color: #000;
+        }
+
+        .aisle {
+            width: 20px;
+            height: 50px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem;
+            background: var(--glass-bg);
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            max-width: 700px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.15rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .modal h4 {
+            margin: 1rem 0 0.5rem;
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin: 0.75rem 0;
+        }
+
+        .preset-btn {
+            padding: 0.75rem 0.4rem;
+            background: var(--glass-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .preset-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+        }
+
+        .preset-btn.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--accent-primary);
+        }
+
+        .preset-btn .preset-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .preset-btn .preset-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .layout-editor {
+            margin-top: 0.75rem;
+        }
+
+        .editor-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .editor-row label {
+            flex: 1;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .editor-row input {
+            width: 70px;
+        }
+
+        .layout-designer {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .layout-designer-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .designer-hint {
+            font-size: 0.7rem;
+            color: var(--accent-warning);
+        }
+
+        .designer-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .designer-row {
+            display: flex;
+            gap: 4px;
+        }
+
+        .designer-cell {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 2px solid transparent;
+        }
+
+        .designer-cell:hover {
+            transform: scale(1.1);
+            border-color: white;
+        }
+
+        .designer-cell.removed {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .designer-cell.removed:hover {
+            background: var(--accent-success);
+            color: white;
+            border-style: solid;
+        }
+
+        .designer-aisle {
+            width: 12px;
+        }
+
+        .info-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .info-box strong {
+            color: var(--accent-primary);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .help-toggle {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .help-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-animation"></div>
+    <header class="header">
+        <h1>🎯 Bänkväljare</h1>
+        <p>GDPR-säker slumpning av bänknummer</p>
+    </header>
+
+    <main class="container">
+        <aside class="card settings-panel">
+            <div class="card-header"><span class="icon">⚙️</span>
+                <h2>Inställningar</h2>
+            </div>
+            <div class="setup-group">
+                <label>Klassrumslayout</label>
+                <button class="btn btn-secondary" id="openLayoutEditor" style="width: 100%;">🏫 Redigera
+                    layout...</button>
+            </div>
+            <div class="setup-group">
+                <label>Max stjärnor per bänk</label>
+                <input type="number" id="maxStars" value="3" min="1" max="10">
+            </div>
+            <div class="setup-group">
+                <label>Urvalsmetod</label>
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="fair"><span class="mode-icon">⚖️</span>Rättvis</button>
+                    <button class="mode-btn" data-mode="weighted"><span class="mode-icon">📊</span>Viktad</button>
+                    <button class="mode-btn" data-mode="random"><span class="mode-icon">🎲</span>Slump</button>
+                </div>
+            </div>
+            <button class="btn btn-danger" id="resetStars" style="width: 100%;">↻ Nollställ stjärnor</button>
+            <div class="info-box">
+                <strong>⚖️ Rättvis:</strong> Minst valda först<br>
+                <strong>📊 Viktad:</strong> Högre chans för färre stjärnor<br>
+                <strong>🎲 Slump:</strong> Helt slumpmässigt
+            </div>
+        </aside>
+
+        <div class="center-panel">
+            <div class="selected-display">
+                <div class="selected-label">Vald bänk</div>
+                <div class="selected-desk" id="selectedDesk">—</div>
+            </div>
+            <button class="btn btn-primary random-btn" id="randomBtn">🎯 Slumpa bänk</button>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="statAvailable">0</div>
+                    <div class="stat-label">Tillgängliga</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statMaxed">0</div>
+                    <div class="stat-label">Maximerade</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Totalt valda</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="icon">🏫</span>
+                <h2>Klassrummet</h2>
+            </div>
+            <div class="classroom-layout" id="classroomLayout"></div>
+        </div>
+    </main>
+
+    <button class="help-toggle" id="helpBtn">?</button>
+
+    <!-- Layout Editor Modal -->
+    <div class="modal-overlay" id="layoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🏫 Klassrumslayout</h3>
+                <button class="modal-close" id="closeLayout">&times;</button>
+            </div>
+            <p>Välj en layout och klicka på enskilda bänkar för att ta bort/lägga till dem.</p>
+
+            <h4>Fördefinierade layouts</h4>
+            <div class="preset-grid">
+                <button class="preset-btn" data-preset="3x8">
+                    <div class="preset-icon">🪑🪑🪑</div>
+                    <div class="preset-name">3 × 8 (24)</div>
+                </button>
+                <button class="preset-btn" data-preset="4x6">
+                    <div class="preset-icon">🪑🪑🪑🪑</div>
+                    <div class="preset-name">4 × 6 (24)</div>
+                </button>
+                <button class="preset-btn active" data-preset="5x5">
+                    <div class="preset-icon">🪑🪑🪑🪑🪑</div>
+                    <div class="preset-name">5 × 5 (25)</div>
+                </button>
+                <button class="preset-btn" data-preset="6x5">
+                    <div class="preset-icon">🪑🪑🪑🪑🪑🪑</div>
+                    <div class="preset-name">6 × 5 (30)</div>
+                </button>
+                <button class="preset-btn" data-preset="2-2-2x5">
+                    <div class="preset-icon">🪑🪑 🪑🪑 🪑🪑</div>
+                    <div class="preset-name">Gruppbord (30)</div>
+                </button>
+                <button class="preset-btn" data-preset="3-3x6">
+                    <div class="preset-icon">🪑🪑🪑 🪑🪑🪑</div>
+                    <div class="preset-name">Mittgång (36)</div>
+                </button>
+            </div>
+
+            <h4>Anpassning</h4>
+            <div class="layout-editor">
+                <div class="editor-row"><label>Bänkar per rad</label><input type="number" id="customCols" value="5"
+                        min="1" max="10"></div>
+                <div class="editor-row"><label>Antal rader</label><input type="number" id="customRows" value="5" min="1"
+                        max="10"></div>
+                <div class="editor-row"><label>Mittgång efter bänk nr</label><input type="number" id="customAisle"
+                        value="0" min="0" max="10" placeholder="0"></div>
+            </div>
+
+            <div class="layout-designer">
+                <div class="layout-designer-title">
+                    <span>Designa klassrummet</span>
+                    <span class="designer-hint">👆 Klicka för att ta bort/lägga till bänkar</span>
+                </div>
+                <div class="designer-grid" id="designerGrid"></div>
+            </div>
+
+            <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+                <button class="btn btn-secondary" id="closeLayoutBtn" style="flex: 1;">Avbryt</button>
+                <button class="btn btn-primary" id="applyLayout" style="flex: 1;">✓ Använd layout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>ℹ️ Om Bänkväljaren</h3><button class="modal-close" id="closeHelp">&times;</button>
+            </div>
+            <p>Bänkväljaren är ett GDPR-säkert verktyg för att slumpa fram vilken elev som ska svara på frågor.</p>
+            <h4>Så fungerar det:</h4>
+            <p>1. Ställ in klassrummets layout (klicka bort bänkar som inte finns)<br>
+                2. Varje elev får hålla koll på sitt bänknummer<br>
+                3. Tryck "Slumpa bänk" för att välja<br>
+                4. Bänken får en stjärna varje gång</p>
+            <h4>Varför bänknummer?</h4>
+            <p>Genom att använda bänknummer istället för elevnamn är verktyget helt anonymiserat och kan publiceras
+                öppet utan GDPR-problem.</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <footer class="footer">Skapat för lärare av <a href="https://github.com/hakan-bjk" target="_blank">Håkan
+            Karlsson</a></footer>
+
+    <script>
+        // State
+        let layout = { rows: 5, cols: 5, aisleAfter: 0 };
+        let removedDesks = new Set(); // Stores positions like "r2c3" for removed desks
+        let maxStars = 3;
+        let selectionMode = 'fair';
+        let desks = [];
+        let selectedDesk = null;
+
+        // Working state for editor
+        let editorLayout = { rows: 5, cols: 5, aisleAfter: 0 };
+        let editorRemovedDesks = new Set();
+
+        const presets = {
+            '3x8': { rows: 8, cols: 3, aisleAfter: 0 },
+            '4x6': { rows: 6, cols: 4, aisleAfter: 0 },
+            '5x5': { rows: 5, cols: 5, aisleAfter: 0 },
+            '6x5': { rows: 5, cols: 6, aisleAfter: 0 },
+            '2-2-2x5': { rows: 5, cols: 6, aisleAfter: 2 },
+            '3-3x6': { rows: 6, cols: 6, aisleAfter: 3 }
+        };
+
+        // DOM Elements
+        const maxStarsInput = document.getElementById('maxStars');
+        const modeBtns = document.querySelectorAll('.mode-btn');
+        const resetStarsBtn = document.getElementById('resetStars');
+        const randomBtn = document.getElementById('randomBtn');
+        const selectedDeskEl = document.getElementById('selectedDesk');
+        const classroomLayout = document.getElementById('classroomLayout');
+        const openLayoutEditor = document.getElementById('openLayoutEditor');
+        const layoutModal = document.getElementById('layoutModal');
+        const closeLayout = document.getElementById('closeLayout');
+        const closeLayoutBtn = document.getElementById('closeLayoutBtn');
+        const applyLayoutBtn = document.getElementById('applyLayout');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const closeHelp = document.getElementById('closeHelp');
+        const toast = document.getElementById('toast');
+        const customCols = document.getElementById('customCols');
+        const customRows = document.getElementById('customRows');
+        const customAisle = document.getElementById('customAisle');
+        const designerGrid = document.getElementById('designerGrid');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+
+        const statAvailable = document.getElementById('statAvailable');
+        const statMaxed = document.getElementById('statMaxed');
+        const statTotal = document.getElementById('statTotal');
+
+        function init() {
+            loadState();
+            initializeDesks();
+            renderClassroom();
+            updateStats();
+            setupEventListeners();
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('bankvaljarState_v2');
+            if (saved) {
+                const state = JSON.parse(saved);
+                layout = state.layout || { rows: 5, cols: 5, aisleAfter: 0 };
+                removedDesks = new Set(state.removedDesks || []);
+                maxStars = state.maxStars || 3;
+                selectionMode = state.selectionMode || 'fair';
+                desks = state.desks || [];
+                
+                maxStarsInput.value = maxStars;
+                customRows.value = layout.rows;
+                customCols.value = layout.cols;
+                customAisle.value = layout.aisleAfter;
+                
+                modeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === selectionMode));
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('bankvaljarState_v2', JSON.stringify({
+                layout, removedDesks: [...removedDesks], maxStars, selectionMode, desks
+            }));
+        }
+
+        function initializeDesks() {
+            const oldDesks = new Map(desks.map(d => [d.position, d]));
+            desks = [];
+            let num = 1;
+            for (let r = 0; r < layout.rows; r++) {
+                for (let c = 0; c < layout.cols; c++) {
+                    const pos = `r${r}c${c}`;
+                    if (!removedDesks.has(pos)) {
+                        const old = oldDesks.get(pos);
+                        desks.push({ number: num, position: pos, stars: old ? old.stars : 0 });
+                        num++;
+                    }
+                }
+            }
+        }
+
+        function renderClassroom() {
+            classroomLayout.innerHTML = '';
+            let deskIndex = 0;
+            
+            for (let r = 0; r < layout.rows; r++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'classroom-row';
+                
+                for (let c = 0; c < layout.cols; c++) {
+                    if (layout.aisleAfter > 0 && c > 0 && c % layout.aisleAfter === 0) {
+                        const aisle = document.createElement('div');
+                        aisle.className = 'aisle';
+                        rowDiv.appendChild(aisle);
+                    }
+                    
+                    const pos = `r${r}c${c}`;
+                    const cell = document.createElement('div');
+                    cell.className = 'desk-cell';
+                    cell.dataset.position = pos;
+                    
+                    if (removedDesks.has(pos)) {
+                        cell.classList.add('empty');
+                        cell.innerHTML = '';
+                    } else {
+                        const desk = desks[deskIndex];
+                        if (desk) {
+                            cell.dataset.number = desk.number;
+                            if (desk.stars >= maxStars) cell.classList.add('maxed');
+                            if (selectedDesk === desk.number) cell.classList.add('selected');
+                            cell.innerHTML = `<span>${desk.number}</span><span class="desk-stars">${'★'.repeat(desk.stars)}</span>`;
+                            deskIndex++;
+                        }
+                    }
+                    rowDiv.appendChild(cell);
+                }
+                classroomLayout.appendChild(rowDiv);
+            }
+        }
+
+        function renderDesignerGrid() {
+            designerGrid.innerHTML = '';
+            let num = 1;
+            
+            for (let r = 0; r < editorLayout.rows; r++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'designer-row';
+                
+                for (let c = 0; c < editorLayout.cols; c++) {
+                    if (editorLayout.aisleAfter > 0 && c > 0 && c % editorLayout.aisleAfter === 0) {
+                        const aisle = document.createElement('div');
+                        aisle.className = 'designer-aisle';
+                        rowDiv.appendChild(aisle);
+                    }
+                    
+                    const pos = `r${r}c${c}`;
+                    const cell = document.createElement('div');
+                    cell.className = 'designer-cell';
+                    cell.dataset.position = pos;
+                    
+                    if (editorRemovedDesks.has(pos)) {
+                        cell.classList.add('removed');
+                        cell.textContent = '+';
+                    } else {
+                        cell.textContent = num;
+                        num++;
+                    }
+                    
+                    cell.addEventListener('click', () => toggleDesignerDesk(pos));
+                    rowDiv.appendChild(cell);
+                }
+                designerGrid.appendChild(rowDiv);
+            }
+        }
+
+        function toggleDesignerDesk(pos) {
+            if (editorRemovedDesks.has(pos)) {
+                editorRemovedDesks.delete(pos);
+            } else {
+                editorRemovedDesks.add(pos);
+            }
+            renderDesignerGrid();
+        }
+
+        function updateStats() {
+            const activeDesks = desks.filter(d => !removedDesks.has(d.position));
+            const available = activeDesks.filter(d => d.stars < maxStars).length;
+            const maxed = activeDesks.filter(d => d.stars >= maxStars).length;
+            const totalStars = activeDesks.reduce((sum, d) => sum + d.stars, 0);
+            
+            statAvailable.textContent = available;
+            statMaxed.textContent = maxed;
+            statTotal.textContent = totalStars;
+        }
+
+        function selectDesk() {
+            const availableDesks = desks.filter(d => d.stars < maxStars);
+            if (availableDesks.length === 0) {
+                showToast('Alla bänkar har nått max stjärnor!');
+                return null;
+            }
+
+            let selected;
+            switch (selectionMode) {
+                case 'fair':
+                    const minStars = Math.min(...availableDesks.map(d => d.stars));
+                    const eligible = availableDesks.filter(d => d.stars === minStars);
+                    selected = eligible[Math.floor(Math.random() * eligible.length)];
+                    break;
+                case 'weighted':
+                    const maxFound = Math.max(...availableDesks.map(d => d.stars));
+                    const weights = availableDesks.map(d => maxFound - d.stars + 1);
+                    const totalWeight = weights.reduce((a, b) => a + b, 0);
+                    let rand = Math.random() * totalWeight;
+                    let cumulative = 0;
+                    for (let i = 0; i < availableDesks.length; i++) {
+                        cumulative += weights[i];
+                        if (rand <= cumulative) { selected = availableDesks[i]; break; }
+                    }
+                    if (!selected) selected = availableDesks[0];
+                    break;
+                case 'random':
+                default:
+                    selected = availableDesks[Math.floor(Math.random() * availableDesks.length)];
+            }
+            return selected;
+        }
+
+        async function animateSelection() {
+            const availableDesks = desks.filter(d => d.stars < maxStars);
+            if (availableDesks.length === 0) { showToast('Alla bänkar har nått max stjärnor!'); return; }
+            randomBtn.disabled = true;
+            
+            const steps = 18, duration = 1200;
+            for (let i = 0; i < steps; i++) {
+                const randomDesk = availableDesks[Math.floor(Math.random() * availableDesks.length)];
+                selectedDeskEl.textContent = randomDesk.number;
+                selectedDeskEl.classList.add('spinning');
+                document.querySelectorAll('.desk-cell').forEach(el => el.classList.remove('spinning-preview'));
+                const previewEl = document.querySelector(`.desk-cell[data-number="${randomDesk.number}"]`);
+                if (previewEl) previewEl.classList.add('spinning-preview');
+                await sleep((duration / steps) * (1 + i / steps));
+                selectedDeskEl.classList.remove('spinning');
+            }
+            
+            document.querySelectorAll('.desk-cell').forEach(el => el.classList.remove('spinning-preview'));
+            const finalDesk = selectDesk();
+            if (finalDesk) {
+                selectedDesk = finalDesk.number;
+                finalDesk.stars++;
+                selectedDeskEl.textContent = finalDesk.number;
+                selectedDeskEl.classList.toggle('golden', finalDesk.stars >= maxStars);
+                renderClassroom();
+                updateStats();
+                saveState();
+            }
+            randomBtn.disabled = false;
+        }
+
+        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+        function showToast(message) { toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+
+        function setupEventListeners() {
+            maxStarsInput.addEventListener('change', () => { maxStars = parseInt(maxStarsInput.value) || 3; renderClassroom(); updateStats(); saveState(); });
+            
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectionMode = btn.dataset.mode;
+                    saveState();
+                });
+            });
+            
+            resetStarsBtn.addEventListener('click', () => {
+                if (confirm('Nollställ alla stjärnor?')) {
+                    desks.forEach(d => d.stars = 0);
+                    selectedDesk = null;
+                    selectedDeskEl.textContent = '—';
+                    selectedDeskEl.classList.remove('golden');
+                    renderClassroom();
+                    updateStats();
+                    saveState();
+                    showToast('Stjärnor nollställda!');
+                }
+            });
+            
+            randomBtn.addEventListener('click', animateSelection);
+            
+            openLayoutEditor.addEventListener('click', () => {
+                editorLayout = { ...layout };
+                editorRemovedDesks = new Set(removedDesks);
+                customRows.value = editorLayout.rows;
+                customCols.value = editorLayout.cols;
+                customAisle.value = editorLayout.aisleAfter;
+                renderDesignerGrid();
+                layoutModal.classList.add('active');
+            });
+            
+            closeLayout.addEventListener('click', () => layoutModal.classList.remove('active'));
+            closeLayoutBtn.addEventListener('click', () => layoutModal.classList.remove('active'));
+            
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    presetBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const preset = presets[btn.dataset.preset];
+                    if (preset) {
+                        editorLayout = { ...preset };
+                        editorRemovedDesks.clear();
+                        customRows.value = preset.rows;
+                        customCols.value = preset.cols;
+                        customAisle.value = preset.aisleAfter;
+                        renderDesignerGrid();
+                    }
+                });
+            });
+            
+            [customRows, customCols, customAisle].forEach(input => {
+                input.addEventListener('input', () => {
+                    editorLayout.rows = parseInt(customRows.value) || 5;
+                    editorLayout.cols = parseInt(customCols.value) || 5;
+                    editorLayout.aisleAfter = parseInt(customAisle.value) || 0;
+                    // Keep only valid removed desks
+                    const newRemoved = new Set();
+                    editorRemovedDesks.forEach(pos => {
+                        const match = pos.match(/r(\d+)c(\d+)/);
+                        if (match && parseInt(match[1]) < editorLayout.rows && parseInt(match[2]) < editorLayout.cols) {
+                            newRemoved.add(pos);
+                        }
+                    });
+                    editorRemovedDesks = newRemoved;
+                    renderDesignerGrid();
+                });
+            });
+            
+            applyLayoutBtn.addEventListener('click', () => {
+                layout = { ...editorLayout };
+                removedDesks = new Set(editorRemovedDesks);
+                initializeDesks();
+                selectedDesk = null;
+                selectedDeskEl.textContent = '—';
+                selectedDeskEl.classList.remove('golden');
+                renderClassroom();
+                updateStats();
+                saveState();
+                layoutModal.classList.remove('active');
+                const activeCount = desks.length;
+                showToast(`Layout: ${layout.cols}×${layout.rows} (${activeCount} bänkar)`);
+            });
+            
+            helpBtn.addEventListener('click', () => helpModal.classList.add('active'));
+            closeHelp.addEventListener('click', () => helpModal.classList.remove('active'));
+            helpModal.addEventListener('click', e => { if (e.target === helpModal) helpModal.classList.remove('active'); });
+            layoutModal.addEventListener('click', e => { if (e.target === layoutModal) layoutModal.classList.remove('active'); });
+            
+            document.addEventListener('keydown', e => {
+                if (e.code === 'Space' && !randomBtn.disabled && !layoutModal.classList.contains('active')) {
+                    e.preventDefault();
+                    animateSelection();
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
