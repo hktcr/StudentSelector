@@ -485,6 +485,40 @@
                 border: none;
             }
         }
+
+        /* Fullscreen mode styling */
+        .classroom:fullscreen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-primary);
+            padding: 2rem;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .classroom:fullscreen .tavla {
+            font-size: 1.5rem;
+            padding: 1.5rem 4rem;
+            max-width: 400px;
+            margin-bottom: 3rem;
+        }
+
+        .classroom:fullscreen .seating-grid {
+            transform: scale(1.5);
+            transform-origin: center center;
+        }
+
+        .classroom:fullscreen .seat {
+            width: 140px;
+            height: 70px;
+        }
+
+        .classroom:fullscreen .student {
+            font-size: 1rem;
+            font-weight: 600;
+        }
     </style>
 </head>
 
