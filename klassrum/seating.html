@@ -509,6 +509,7 @@
 
         .classroom:fullscreen .seating-grid {
             gap: 1rem;
+            grid-template-columns: repeat(5, 160px) !important;
         }
 
         .classroom:fullscreen .seat {
@@ -932,6 +933,15 @@
                 });
             } else {
                 document.exitFullscreen();
+            }
+        });
+
+        // Update grid columns on fullscreen change
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 160px)`;
+            } else {
+                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 120px)`;
             }
         });
 
