@@ -496,28 +496,30 @@
             padding: 2rem;
             width: 100vw;
             height: 100vh;
+            overflow: auto;
         }
 
         .classroom:fullscreen .tavla {
             font-size: 1.5rem;
             padding: 1.5rem 4rem;
             max-width: 400px;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            flex-shrink: 0;
         }
 
         .classroom:fullscreen .seating-grid {
-            transform: scale(1.5);
-            transform-origin: center center;
+            gap: 1rem;
         }
 
         .classroom:fullscreen .seat {
-            width: 140px;
-            height: 70px;
+            width: 160px;
+            height: 80px;
         }
 
         .classroom:fullscreen .student {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
+            padding: 0.75rem 1.25rem;
         }
     </style>
 </head>
