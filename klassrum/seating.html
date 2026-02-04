@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klassrumsplacering</title>
+    <style>
+        /* === Design System === */
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #252540;
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --accent-primary: #6366f1;
+            --accent-secondary: #818cf8;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f5f5f7;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6b7280;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="print"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --accent-primary: #333333;
+            --border-color: #000000;
+            --shadow-soft: none;
+            --shadow-glow: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-warning {
+            background: var(--accent-warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        select {
+            padding: 0.625rem 1rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        select:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .sidebar {
+            width: 200px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .sidebar h3 {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-right {
+            width: 180px;
+        }
+
+        .unplaced-zone {
+            min-height: 200px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border: 2px dashed var(--border-color);
+            transition: var(--transition);
+        }
+
+        .unplaced-zone.drag-over {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .classroom-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: auto;
+        }
+
+        .classroom {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .tavla {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: white;
+            text-align: center;
+            padding: 1rem 3rem;
+            border-radius: var(--radius-sm);
+            margin: 0 auto 2rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+        }
+
+        [data-theme="print"] .tavla {
+            background: white;
+            color: black;
+            border: 2px solid black;
+        }
+
+        .seating-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .seat {
+            width: 120px;
+            height: 60px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .seat:hover {
+            border-color: var(--accent-primary);
+            transform: scale(1.02);
+        }
+
+        .seat.drag-over {
+            border-color: var(--accent-success);
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .seat.empty {
+            background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255, 255, 255, 0.02) 5px, rgba(255, 255, 255, 0.02) 10px);
+            border-style: dashed;
+        }
+
+        [data-theme="print"] .seat {
+            border: 1px solid black;
+            background: white;
+        }
+
+        [data-theme="print"] .seat.empty {
+            background: white;
+            border-style: dashed;
+        }
+
+        .seat.removed {
+            background: transparent;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            opacity: 0.3;
+            cursor: pointer;
+        }
+
+        .seat.removed:hover {
+            opacity: 0.6;
+            border-color: var(--accent-primary);
+        }
+
+        [data-theme="light"] .seat.removed {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="print"] .seat.removed {
+            visibility: hidden;
+        }
+
+        .student {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: grab;
+            transition: var(--transition);
+            user-select: none;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .student:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .student.dragging {
+            opacity: 0.5;
+            transform: scale(1.1);
+        }
+
+        .seat .student {
+            position: absolute;
+            width: calc(100% - 8px);
+            height: calc(100% - 8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        [data-theme="print"] .student {
+            background: white;
+            border: 1px solid black;
+            color: black;
+        }
+
+        .settings {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .settings label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .settings input[type="number"] {
+            padding: 0.5rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            width: 100%;
+        }
+
+        .theme-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .theme-btn {
+            padding: 0.5rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .modal-content input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--accent-danger);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .unplaced-zone {
+                flex-direction: row;
+                flex-wrap: wrap;
+                min-height: auto;
+            }
+        }
+
+        @media print {
+
+            .app-header,
+            .sidebar {
+                display: none !important;
+            }
+
+            .classroom-wrapper {
+                padding: 0;
+            }
+
+            .classroom {
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>🪑 Klassrumsplacering</h1>
+            <div class="controls">
+                <select id="classSelect">
+                    <option value="klass1">BJKA1-25</option>
+                    <option value="klass2">BJKD1-25</option>
+                    <option value="klass3">BJKE1-25</option>
+                </select>
+                <button id="exportBtn" class="btn btn-primary">
+                    <span class="icon">📷</span> Exportera PNG
+                </button>
+                <button id="addStudentBtn" class="btn btn-secondary">
+                    <span class="icon">➕</span> Lägg till elev
+                </button>
+                <button id="resetBtn" class="btn btn-warning">
+                    <span class="icon">🔄</span> Återställ
+                </button>
+                <button id="clearDesksBtn" class="btn btn-secondary">
+                    <span class="icon">🧹</span> Töm bänkar
+                </button>
+                <button id="fullscreenBtn" class="btn btn-secondary">
+                    <span class="icon">🖥️</span> Helskärm
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="sidebar">
+                <h3>📋 Ej placerade</h3>
+                <div id="unplacedStudents" class="unplaced-zone"></div>
+            </div>
+
+            <div class="classroom-wrapper">
+                <div id="classroom" class="classroom">
+                    <div class="tavla">Tavla</div>
+                    <div id="seatingGrid" class="seating-grid"></div>
+                </div>
+            </div>
+
+            <div class="sidebar sidebar-right">
+                <h3>⚙️ Inställningar</h3>
+                <div class="settings">
+                    <label>
+                        Rader:
+                        <input type="number" id="rowCount" value="5" min="1" max="10">
+                    </label>
+                    <label>
+                        Kolumner:
+                        <input type="number" id="colCount" value="5" min="1" max="8">
+                    </label>
+                    <button id="applyGridBtn" class="btn btn-small">Applicera</button>
+                </div>
+                <h3 style="margin-top: 1.5rem;">🎨 Tema</h3>
+                <div class="theme-buttons">
+                    <button class="theme-btn" data-theme="light">☀️ Ljust</button>
+                    <button class="theme-btn" data-theme="dark">🌙 Mörkt</button>
+                    <button class="theme-btn" data-theme="print">🖨️ Print</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Lägg till elev</h2>
+            <input type="text" id="newStudentName" placeholder="Elevens namn">
+            <button id="confirmAddStudent" class="btn btn-primary">Lägg till</button>
+        </div>
+    </div>
+
+    <div id="editStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Redigera elev</h2>
+            <input type="text" id="editStudentName" placeholder="Elevens namn">
+            <div class="modal-actions">
+                <button id="confirmEditStudent" class="btn btn-primary">Spara</button>
+                <button id="deleteStudent" class="btn btn-danger">Ta bort</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const classData = {
+            klass1: {
+                name: "BJKA1-25",
+                rows: 5,
+                cols: 5,
+                students: [
+                    ["Emran", "Aoys", "Asiya", "Sahar", "Viktor"],
+                    ["Vilte", "Bonnie", "Edwin", "Anastasia", "Asef"],
+                    ["Lea", "Agnes", "Emin", "Bisan", "Amanda"],
+                    ["Emilio", "Sham", "Emil", "Zouha", "Haydar"],
+                    ["Luna", "Lilo", "", "", ""]
+                ]
+            },
+            klass2: {
+                name: "BJKD1-25",
+                rows: 5,
+                cols: 5,
+                students: [
+                    ["Millie", "Linnéa", "Mousa", "Alice", "Saga"],
+                    ["Adelie", "Louise", "Anabelle", "Ziyad", "Youssef"],
+                    ["Ahmed", "Wille", "Ahmad", "Zaga", "Lowa"],
+                    ["", "Sixten", "Vincent", "Casper", "Bao"],
+                    ["Rayan", "Tilda", "", "", "Semran"]
+                ]
+            },
+            klass3: {
+                name: "BJKE1-25",
+                rows: 5,
+                cols: 5,
+                students: [
+                    ["Amina", "Lorik", "Alia", "Jaxz", "Raul"],
+                    ["Elisei", "Hugo", "Bastian", "Hugo", "Izabelle"],
+                    ["Ibrahim", "Miral", "Elin", "Thea", "Hazem"],
+                    ["Ruth", "Lian", "Dijana", "Abel", "Jack"],
+                    ["Elin", "", "", "Fideli", "Nelia"]
+                ]
+            }
+        };
+
+        let currentClass = 'klass1';
+        let currentLayout = null;
+        let draggedStudent = null;
+        let draggedFrom = null;
+
+        const classSelect = document.getElementById('classSelect');
+        const seatingGrid = document.getElementById('seatingGrid');
+        const unplacedStudents = document.getElementById('unplacedStudents');
+        const rowCountInput = document.getElementById('rowCount');
+        const colCountInput = document.getElementById('colCount');
+        const exportBtn = document.getElementById('exportBtn');
+        const addStudentBtn = document.getElementById('addStudentBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const clearDesksBtn = document.getElementById('clearDesksBtn');
+        const applyGridBtn = document.getElementById('applyGridBtn');
+        const addStudentModal = document.getElementById('addStudentModal');
+        const editStudentModal = document.getElementById('editStudentModal');
+        const newStudentNameInput = document.getElementById('newStudentName');
+        const editStudentNameInput = document.getElementById('editStudentName');
+        const confirmAddStudent = document.getElementById('confirmAddStudent');
+        const confirmEditStudent = document.getElementById('confirmEditStudent');
+        const deleteStudentBtn = document.getElementById('deleteStudent');
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        function init() {
+            loadClass(currentClass);
+            setupEventListeners();
+        }
+
+        function loadClass(classKey) {
+            currentClass = classKey;
+            const data = classData[classKey];
+            currentLayout = {
+                name: data.name,
+                rows: data.rows,
+                cols: data.cols,
+                grid: data.students.map(row => [...row]),
+                unplaced: [],
+                removedSeats: []
+            };
+            const saved = localStorage.getItem(`seating_${classKey}`);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                currentLayout.grid = parsed.grid;
+                currentLayout.unplaced = parsed.unplaced || [];
+                currentLayout.rows = parsed.rows || data.rows;
+                currentLayout.cols = parsed.cols || data.cols;
+                currentLayout.removedSeats = parsed.removedSeats || [];
+            }
+            rowCountInput.value = currentLayout.rows;
+            colCountInput.value = currentLayout.cols;
+            renderGrid();
+            renderUnplaced();
+        }
+
+        function saveLayout() {
+            localStorage.setItem(`seating_${currentClass}`, JSON.stringify({
+                grid: currentLayout.grid,
+                unplaced: currentLayout.unplaced,
+                rows: currentLayout.rows,
+                cols: currentLayout.cols,
+                removedSeats: currentLayout.removedSeats
+            }));
+        }
+
+        function renderGrid() {
+            seatingGrid.innerHTML = '';
+            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 120px)`;
+            for (let row = 0; row < currentLayout.rows; row++) {
+                for (let col = 0; col < currentLayout.cols; col++) {
+                    const seatKey = `${row}-${col}`;
+                    const isRemoved = currentLayout.removedSeats.includes(seatKey);
+                    const seat = document.createElement('div');
+                    seat.className = 'seat';
+                    seat.dataset.row = row;
+                    seat.dataset.col = col;
+                    if (isRemoved) {
+                        seat.classList.add('removed');
+                        seat.addEventListener('contextmenu', (e) => { e.preventDefault(); toggleSeatRemoved(row, col); });
+                        seatingGrid.appendChild(seat);
+                        continue;
+                    }
+                    const studentName = currentLayout.grid[row]?.[col] || '';
+                    if (studentName) {
+                        const student = createStudentElement(studentName);
+                        seat.appendChild(student);
+                    } else {
+                        seat.classList.add('empty');
+                        seat.addEventListener('contextmenu', (e) => { e.preventDefault(); toggleSeatRemoved(row, col); });
+                    }
+                    seat.addEventListener('dragover', handleDragOver);
+                    seat.addEventListener('dragleave', handleDragLeave);
+                    seat.addEventListener('drop', handleDrop);
+                    seatingGrid.appendChild(seat);
+                }
+            }
+        }
+
+        function toggleSeatRemoved(row, col) {
+            const seatKey = `${row}-${col}`;
+            const idx = currentLayout.removedSeats.indexOf(seatKey);
+            if (idx > -1) currentLayout.removedSeats.splice(idx, 1);
+            else currentLayout.removedSeats.push(seatKey);
+            saveLayout();
+            renderGrid();
+        }
+
+        function renderUnplaced() {
+            unplacedStudents.innerHTML = '';
+            currentLayout.unplaced.forEach(name => {
+                const student = createStudentElement(name);
+                unplacedStudents.appendChild(student);
+            });
+        }
+
+        function createStudentElement(name) {
+            const student = document.createElement('div');
+            student.className = 'student';
+            student.textContent = name;
+            student.draggable = true;
+            student.addEventListener('dragstart', handleDragStart);
+            student.addEventListener('dragend', handleDragEnd);
+            student.addEventListener('dblclick', () => openEditModal(student));
+            return student;
+        }
+
+        function handleDragStart(e) {
+            draggedStudent = e.target.textContent;
+            e.target.classList.add('dragging');
+            const seat = e.target.closest('.seat');
+            if (seat) draggedFrom = { type: 'seat', row: parseInt(seat.dataset.row), col: parseInt(seat.dataset.col) };
+            else draggedFrom = { type: 'unplaced' };
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedStudent = null;
+            draggedFrom = null;
+        }
+
+        function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+        function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const targetSeat = e.currentTarget;
+            const targetRow = parseInt(targetSeat.dataset.row);
+            const targetCol = parseInt(targetSeat.dataset.col);
+            if (!draggedStudent) return;
+            const existingStudent = currentLayout.grid[targetRow]?.[targetCol] || '';
+            if (draggedFrom.type === 'seat') {
+                currentLayout.grid[draggedFrom.row][draggedFrom.col] = existingStudent;
+            } else {
+                const idx = currentLayout.unplaced.indexOf(draggedStudent);
+                if (idx > -1) currentLayout.unplaced.splice(idx, 1);
+                if (existingStudent) currentLayout.unplaced.push(existingStudent);
+            }
+            while (currentLayout.grid.length <= targetRow) currentLayout.grid.push([]);
+            while (currentLayout.grid[targetRow].length <= targetCol) currentLayout.grid[targetRow].push('');
+            currentLayout.grid[targetRow][targetCol] = draggedStudent;
+            saveLayout();
+            renderGrid();
+            renderUnplaced();
+        }
+
+        unplacedStudents.addEventListener('dragover', (e) => { e.preventDefault(); unplacedStudents.classList.add('drag-over'); });
+        unplacedStudents.addEventListener('dragleave', () => { unplacedStudents.classList.remove('drag-over'); });
+        unplacedStudents.addEventListener('drop', (e) => {
+            e.preventDefault();
+            unplacedStudents.classList.remove('drag-over');
+            if (!draggedStudent || draggedFrom.type === 'unplaced') return;
+            currentLayout.grid[draggedFrom.row][draggedFrom.col] = '';
+            currentLayout.unplaced.push(draggedStudent);
+            saveLayout();
+            renderGrid();
+            renderUnplaced();
+        });
+
+        let editingStudent = null;
+        function openEditModal(studentElement) {
+            editingStudent = studentElement;
+            editStudentNameInput.value = studentElement.textContent;
+            editStudentModal.classList.add('active');
+            editStudentNameInput.focus();
+        }
+
+        function closeModals() {
+            addStudentModal.classList.remove('active');
+            editStudentModal.classList.remove('active');
+            newStudentNameInput.value = '';
+            editStudentNameInput.value = '';
+            editingStudent = null;
+        }
+
+        document.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', closeModals));
+
+        addStudentBtn.addEventListener('click', () => { addStudentModal.classList.add('active'); newStudentNameInput.focus(); });
+
+        confirmAddStudent.addEventListener('click', () => {
+            const name = newStudentNameInput.value.trim();
+            if (name) { currentLayout.unplaced.push(name); saveLayout(); renderUnplaced(); }
+            closeModals();
+        });
+
+        newStudentNameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') confirmAddStudent.click(); });
+
+        confirmEditStudent.addEventListener('click', () => {
+            const newName = editStudentNameInput.value.trim();
+            if (!newName || !editingStudent) { closeModals(); return; }
+            const oldName = editingStudent.textContent;
+            for (let row of currentLayout.grid) {
+                for (let i = 0; i < row.length; i++) { if (row[i] === oldName) row[i] = newName; }
+            }
+            const idx = currentLayout.unplaced.indexOf(oldName);
+            if (idx > -1) currentLayout.unplaced[idx] = newName;
+            saveLayout();
+            renderGrid();
+            renderUnplaced();
+            closeModals();
+        });
+
+        deleteStudentBtn.addEventListener('click', () => {
+            if (!editingStudent) { closeModals(); return; }
+            const name = editingStudent.textContent;
+            for (let row of currentLayout.grid) {
+                for (let i = 0; i < row.length; i++) { if (row[i] === name) row[i] = ''; }
+            }
+            const idx = currentLayout.unplaced.indexOf(name);
+            if (idx > -1) currentLayout.unplaced.splice(idx, 1);
+            saveLayout();
+            renderGrid();
+            renderUnplaced();
+            closeModals();
+        });
+
+        editStudentNameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') confirmEditStudent.click(); });
+
+        resetBtn.addEventListener('click', () => {
+            if (confirm('Vill du återställa till originalplaceringen?')) {
+                localStorage.removeItem(`seating_${currentClass}`);
+                loadClass(currentClass);
+            }
+        });
+
+        clearDesksBtn.addEventListener('click', () => {
+            for (let row of currentLayout.grid) {
+                for (let i = 0; i < row.length; i++) {
+                    if (row[i]) { currentLayout.unplaced.push(row[i]); row[i] = ''; }
+                }
+            }
+            saveLayout();
+            renderGrid();
+            renderUnplaced();
+        });
+
+        applyGridBtn.addEventListener('click', () => {
+            const newRows = parseInt(rowCountInput.value);
+            const newCols = parseInt(colCountInput.value);
+            if (newRows < 1 || newCols < 1) return;
+            currentLayout.rows = newRows;
+            currentLayout.cols = newCols;
+            while (currentLayout.grid.length < newRows) currentLayout.grid.push(new Array(newCols).fill(''));
+            for (let row of currentLayout.grid) { while (row.length < newCols) row.push(''); }
+            saveLayout();
+            renderGrid();
+        });
+
+        classSelect.addEventListener('change', (e) => loadClass(e.target.value));
+
+        themeButtons.forEach(btn => btn.addEventListener('click', () => { document.body.dataset.theme = btn.dataset.theme; }));
+
+        // Fullscreen toggle
+        fullscreenBtn.addEventListener('click', () => {
+            const classroom = document.getElementById('classroom');
+            if (!document.fullscreenElement) {
+                classroom.requestFullscreen().catch(err => {
+                    console.error('Fullscreen error:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        exportBtn.addEventListener('click', async () => {
+            const classroom = document.getElementById('classroom');
+            if (typeof html2canvas === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                document.head.appendChild(script);
+                await new Promise(resolve => script.onload = resolve);
+            }
+            try {
+                const canvas = await html2canvas(classroom, {
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-primary'),
+                    scale: 2,
+                    useCORS: true
+                });
+                const link = document.createElement('a');
+                link.download = `klassrumsplacering_${currentLayout.name}_${new Date().toISOString().split('T')[0]}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error('Export failed:', err);
+                alert('Exporteringen misslyckades. Försök igen.');
+            }
+        });
+
+        function setupEventListeners() {
+            window.addEventListener('click', (e) => { if (e.target.classList.contains('modal')) closeModals(); });
+            window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModals(); });
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
