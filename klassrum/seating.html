@@ -311,16 +311,16 @@
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            padding: 0.5rem 1rem;
+            padding: 0.3rem 0.5rem;
             font-size: 0.875rem;
             font-weight: 500;
             cursor: grab;
             transition: var(--transition);
             user-select: none;
             white-space: nowrap;
-            text-overflow: ellipsis;
             overflow: hidden;
             max-width: 100%;
+            text-align: center;
         }
 
         .student:hover {
@@ -1443,6 +1443,7 @@
                     seatingGrid.appendChild(seat);
                 }
             }
+            autoFitStudentFontSize();
         }
 
         function applySeatSizes() {
@@ -1451,6 +1452,36 @@
             document.querySelectorAll('.seat').forEach(s => {
                 s.style.width = size.width + 'px';
                 s.style.height = size.height + 'px';
+            });
+            autoFitStudentFontSize();
+        }
+
+        function autoFitStudentFontSize() {
+            const seats = document.querySelectorAll('.seat:not(.removed):not(.empty)');
+            if (!seats.length) return;
+            const seatW = seats[0].offsetWidth;
+            if (!seatW) return;
+            const padH = 14; // horizontal padding inside seat
+            const availW = seatW - padH;
+            // Find all student names
+            const names = [];
+            document.querySelectorAll('.seating-grid .student').forEach(s => names.push(s.textContent));
+            if (!names.length) return;
+            // Use canvas to measure text
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            // Binary search for max font size that fits all names
+            let lo = 8, hi = 24;
+            while (hi - lo > 0.5) {
+                const mid = (lo + hi) / 2;
+                ctx.font = `500 ${mid}px Inter, -apple-system, sans-serif`;
+                const maxTextW = Math.max(...names.map(n => ctx.measureText(n).width));
+                if (maxTextW <= availW) lo = mid;
+                else hi = mid;
+            }
+            const optimalSize = Math.floor(lo * 10) / 10;
+            document.querySelectorAll('.seating-grid .student').forEach(s => {
+                s.style.fontSize = optimalSize + 'px';
             });
         }
 
