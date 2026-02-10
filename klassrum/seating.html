@@ -162,16 +162,17 @@
         .main-content {
             display: flex;
             flex: 1;
-            gap: 1.5rem;
-            padding: 1.5rem;
+            gap: clamp(0.5rem, 1vw, 1.5rem);
+            padding: clamp(0.5rem, 1.5vw, 1.5rem);
         }
 
         .sidebar {
-            width: 200px;
+            width: clamp(140px, 14vw, 200px);
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 1rem;
+            padding: clamp(0.5rem, 1vw, 1rem);
             border: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
 
         .sidebar h3 {
@@ -183,7 +184,7 @@
         }
 
         .sidebar-right {
-            width: 180px;
+            width: clamp(120px, 12vw, 180px);
         }
 
         .unplaced-zone {
@@ -214,9 +215,11 @@
         .classroom {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 2rem;
+            padding: clamp(0.75rem, 2vw, 2rem);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-soft);
+            width: 100%;
+            max-width: fit-content;
         }
 
         .tavla {
@@ -241,12 +244,12 @@
 
         .seating-grid {
             display: grid;
-            gap: 0.75rem;
+            gap: clamp(0.35rem, 0.6vw, 0.75rem);
         }
 
         .seat {
-            width: 120px;
-            height: 60px;
+            width: clamp(80px, 8vw, 140px);
+            height: clamp(45px, 4.5vw, 65px);
             background: var(--bg-card);
             border: 2px solid var(--border-color);
             border-radius: var(--radius-sm);
@@ -1385,7 +1388,7 @@
 
         function renderGrid() {
             seatingGrid.innerHTML = '';
-            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 120px)`;
+            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, clamp(80px, 8vw, 140px))`;
             for (let row = 0; row < currentLayout.rows; row++) {
                 for (let col = 0; col < currentLayout.cols; col++) {
                     const seatKey = `${row}-${col}`;
@@ -1608,7 +1611,7 @@
             if (document.fullscreenElement) {
                 seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 160px)`;
             } else {
-                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 120px)`;
+                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, clamp(80px, 8vw, 140px))`;
             }
         });
 
@@ -1729,7 +1732,7 @@
         function renderBankvalGrid() {
             const grid = document.getElementById('bankvalGrid');
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 110px)`;
+            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, clamp(70px, 7vw, 110px))`;
 
             for (let row = 0; row < currentLayout.rows; row++) {
                 for (let col = 0; col < currentLayout.cols; col++) {
