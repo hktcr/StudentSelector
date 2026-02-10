@@ -522,6 +522,448 @@
             font-weight: 600;
             padding: 0.75rem 1.25rem;
         }
+
+        /* === Bänkväljare Overlay === */
+        .bankval-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 900;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .bankval-overlay.active {
+            display: flex;
+        }
+
+        .bankval-header {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .bankval-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .bankval-close {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .bankval-close:hover {
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .bankval-body {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        @media (max-width: 800px) {
+            .bankval-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bankval-controls {
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: fit-content;
+        }
+
+        .bankval-display-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bankval-result {
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bankval-result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+        }
+
+        .bankval-result-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .bankval-result-name {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            transition: all 0.3s ease;
+            min-height: 1.2em;
+        }
+
+        .bankval-result-name.spinning {
+            animation: bvSpin 0.12s ease-in-out;
+        }
+
+        @keyframes bvSpin {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 0.7;
+            }
+        }
+
+        .bankval-result-name.golden {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .bankval-random-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            transition: all 0.2s;
+        }
+
+        .bankval-random-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .bankval-random-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .bankval-random-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .bankval-grid-wrapper {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 2rem 1rem 1rem;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .bankval-grid-wrapper::before {
+            content: '📺 TAVLA';
+            position: absolute;
+            top: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #6366f1;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .bankval-grid {
+            display: grid;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .bv-seat {
+            width: 110px;
+            height: 55px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: default;
+            position: relative;
+        }
+
+        .bv-seat .bv-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f0f0f5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+
+        .bv-seat .bv-stars {
+            font-size: 0.55rem;
+            color: #fbbf24;
+            margin-top: 1px;
+        }
+
+        .bv-seat.empty {
+            background: transparent;
+            border: 2px dashed rgba(255, 255, 255, 0.08);
+            opacity: 0.3;
+        }
+
+        .bv-seat.removed {
+            background: transparent;
+            border: 2px dashed rgba(255, 255, 255, 0.05);
+            opacity: 0.15;
+        }
+
+        .bv-seat.selected {
+            background: rgba(99, 102, 241, 0.4);
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+            animation: bvPulse 0.5s ease-out;
+        }
+
+        @keyframes bvPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.12);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .bv-seat.maxed {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            border-color: #f59e0b;
+        }
+
+        .bv-seat.maxed .bv-name {
+            color: #000;
+        }
+
+        .bv-seat.maxed .bv-stars {
+            color: #000;
+        }
+
+        .bv-seat.spinning-preview {
+            background: rgba(168, 85, 247, 0.5);
+            border-color: #a855f7;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .bv-section-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .bv-mode-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .bv-mode-btn {
+            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bv-mode-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f0f0f5;
+        }
+
+        .bv-mode-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: #6366f1;
+            color: #818cf8;
+        }
+
+        .bv-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .bv-input-group input {
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #f0f0f5;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .bv-input-group input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .bv-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .bv-stat {
+            text-align: center;
+        }
+
+        .bv-stat-value {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #6366f1;
+        }
+
+        .bv-stat-label {
+            font-size: 0.6rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .bv-reset-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            color: #ef4444;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bv-reset-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        .bv-info {
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 8px;
+            padding: 0.6rem;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        .bv-info strong {
+            color: #818cf8;
+        }
+
+        .bankval-toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(30, 30, 50, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #f0f0f5;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease;
+            z-index: 1100;
+        }
+
+        .bankval-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        #bankvalToggle.active {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
     </style>
 </head>
 
@@ -549,6 +991,9 @@
                 </button>
                 <button id="fullscreenBtn" class="btn btn-secondary">
                     <span class="icon">🖥️</span> Helskärm
+                </button>
+                <button id="bankvalToggle" class="btn btn-secondary">
+                    <span class="icon">🎯</span> Bänkväljare
                 </button>
             </div>
         </header>
@@ -610,6 +1055,65 @@
         </div>
     </div>
 
+    <!-- Bänkväljare Overlay -->
+    <div id="bankvalOverlay" class="bankval-overlay">
+        <div class="bankval-header">
+            <h2>🎯 Bänkväljare</h2>
+            <button id="bankvalClose" class="bankval-close">✕</button>
+        </div>
+        <div class="bankval-body">
+            <div class="bankval-controls">
+                <div class="bv-section-label">Urvalsmetod</div>
+                <div class="bv-mode-selector">
+                    <button class="bv-mode-btn active" data-mode="fair">⚖️ Rättvis</button>
+                    <button class="bv-mode-btn" data-mode="weighted">📊 Viktad</button>
+                    <button class="bv-mode-btn" data-mode="random">🎲 Slump</button>
+                </div>
+
+                <div class="bv-input-group">
+                    <span class="bv-section-label">Max stjärnor per elev</span>
+                    <input type="number" id="bankvalMaxStars" value="3" min="1" max="10">
+                </div>
+
+                <div class="bv-stats">
+                    <div class="bv-stat">
+                        <div class="bv-stat-value" id="bvStatAvailable">0</div>
+                        <div class="bv-stat-label">Tillgängliga</div>
+                    </div>
+                    <div class="bv-stat">
+                        <div class="bv-stat-value" id="bvStatMaxed">0</div>
+                        <div class="bv-stat-label">Maximerade</div>
+                    </div>
+                    <div class="bv-stat">
+                        <div class="bv-stat-value" id="bvStatTotal">0</div>
+                        <div class="bv-stat-label">Totalt</div>
+                    </div>
+                </div>
+
+                <button class="bv-reset-btn" id="bankvalResetStars">↻ Nollställ stjärnor</button>
+
+                <div class="bv-info">
+                    <strong>⚖️ Rättvis:</strong> Minst valda först<br>
+                    <strong>📊 Viktad:</strong> Högre chans för färre stjärnor<br>
+                    <strong>🎲 Slump:</strong> Helt slumpmässigt<br>
+                    <strong>Mellanslag</strong> = slumpa
+                </div>
+            </div>
+
+            <div class="bankval-display-area">
+                <div class="bankval-result">
+                    <div class="bankval-result-label">Vald elev</div>
+                    <div class="bankval-result-name" id="bankvalDisplay">—</div>
+                </div>
+                <button class="bankval-random-btn" id="bankvalRandomBtn">🎯 Slumpa elev</button>
+                <div class="bankval-grid-wrapper">
+                    <div class="bankval-grid" id="bankvalGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bankval-toast" id="bankvalToast"></div>
+
     <script>
         const classData = {
             klass1: {
@@ -617,11 +1121,11 @@
                 rows: 5,
                 cols: 5,
                 students: [
-                    ["Emran", "Aoys", "Asiya", "Sahar", "Viktor"],
-                    ["Vilte", "Bonnie", "Edwin", "Anastasia", "Asef"],
-                    ["Lea", "Agnes", "Emin", "Bisan", "Amanda"],
-                    ["Emilio", "Sham", "Emil", "Zouha", "Haydar"],
-                    ["Luna", "Lilo", "", "", ""]
+                    ["Atena", "Emil", "Asiya", "Emran", "Emin"],
+                    ["Anastasia", "Haydar", "Sham", "Lilo", "Vilte"],
+                    ["Sahar", "Edwin", "Bisan", "Viktor", "Zouha"],
+                    ["Asef", "Aoys", "Amanda", "Agnes", "Bonnie"],
+                    ["Emilio", "Luna", "", "", "Lea"]
                 ]
             },
             klass2: {
@@ -629,11 +1133,11 @@
                 rows: 5,
                 cols: 5,
                 students: [
-                    ["Millie", "Linnéa", "Mousa", "Alice", "Saga"],
-                    ["Adelie", "Louise", "Anabelle", "Ziyad", "Youssef"],
+                    ["Adelie", "Louise", "Anabelle", "Alice", "Saga"],
+                    ["Millie", "Linnéa", "Mousa", "Ziyad", "Youssef"],
                     ["Ahmed", "Wille", "Ahmad", "Zaga", "Lowa"],
-                    ["", "Sixten", "Vincent", "Casper", "Bao"],
-                    ["Rayan", "Tilda", "", "", "Semran"]
+                    ["Bao", "Casper", "", "Sixten", "Vincent"],
+                    ["Semran", "", "", "Tilda", "Rayan"]
                 ]
             },
             klass3: {
@@ -973,6 +1477,285 @@
             window.addEventListener('click', (e) => { if (e.target.classList.contains('modal')) closeModals(); });
             window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModals(); });
         }
+
+        // === Bänkväljare Integration ===
+        let bankvalActive = false;
+        let bankvalMode = 'fair';
+        let bankvalMaxStarsVal = 3;
+        let bankvalStudentData = {};
+        let bankvalSelectedName = null;
+
+        function loadBankvalState() {
+            const saved = localStorage.getItem('bankval_state');
+            if (saved) {
+                const state = JSON.parse(saved);
+                bankvalMode = state.mode || 'fair';
+                bankvalMaxStarsVal = state.maxStars || 3;
+                bankvalStudentData = state.studentData || {};
+            }
+            document.getElementById('bankvalMaxStars').value = bankvalMaxStarsVal;
+            document.querySelectorAll('.bv-mode-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.mode === bankvalMode);
+            });
+        }
+
+        function saveBankvalState() {
+            localStorage.setItem('bankval_state', JSON.stringify({
+                mode: bankvalMode,
+                maxStars: bankvalMaxStarsVal,
+                studentData: bankvalStudentData
+            }));
+        }
+
+        function getPlacedStudents() {
+            const students = [];
+            if (!currentLayout) return students;
+            for (let row = 0; row < currentLayout.rows; row++) {
+                for (let col = 0; col < currentLayout.cols; col++) {
+                    const seatKey = `${row}-${col}`;
+                    if (currentLayout.removedSeats && currentLayout.removedSeats.includes(seatKey)) continue;
+                    const name = currentLayout.grid[row]?.[col];
+                    if (name && name.trim()) {
+                        students.push({ name: name.trim(), row, col });
+                    }
+                }
+            }
+            return students;
+        }
+
+        function getStudentStars(name) {
+            if (!bankvalStudentData[currentClass]) bankvalStudentData[currentClass] = {};
+            if (!bankvalStudentData[currentClass][name]) bankvalStudentData[currentClass][name] = { stars: 0 };
+            return bankvalStudentData[currentClass][name].stars;
+        }
+
+        function addStudentStar(name) {
+            if (!bankvalStudentData[currentClass]) bankvalStudentData[currentClass] = {};
+            if (!bankvalStudentData[currentClass][name]) bankvalStudentData[currentClass][name] = { stars: 0 };
+            bankvalStudentData[currentClass][name].stars++;
+        }
+
+        function toggleBankval() {
+            bankvalActive = !bankvalActive;
+            const overlay = document.getElementById('bankvalOverlay');
+            const toggleBtn = document.getElementById('bankvalToggle');
+            if (bankvalActive) {
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                loadBankvalState();
+                renderBankvalGrid();
+                updateBankvalStats();
+            } else {
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+            }
+        }
+
+        function renderBankvalGrid() {
+            const grid = document.getElementById('bankvalGrid');
+            grid.innerHTML = '';
+            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 110px)`;
+
+            for (let row = 0; row < currentLayout.rows; row++) {
+                for (let col = 0; col < currentLayout.cols; col++) {
+                    const seatKey = `${row}-${col}`;
+                    const isRemoved = currentLayout.removedSeats && currentLayout.removedSeats.includes(seatKey);
+                    const cell = document.createElement('div');
+                    cell.className = 'bv-seat';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+
+                    if (isRemoved) {
+                        cell.classList.add('removed');
+                        grid.appendChild(cell);
+                        continue;
+                    }
+
+                    const name = currentLayout.grid[row]?.[col] || '';
+                    if (name && name.trim()) {
+                        const stars = getStudentStars(name.trim());
+                        const isMaxed = stars >= bankvalMaxStarsVal;
+                        const isSelected = bankvalSelectedName === name.trim();
+                        if (isMaxed) cell.classList.add('maxed');
+                        if (isSelected) cell.classList.add('selected');
+                        cell.innerHTML = `<span class="bv-name">${name.trim()}</span><span class="bv-stars">${'★'.repeat(stars)}</span>`;
+                    } else {
+                        cell.classList.add('empty');
+                    }
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function updateBankvalStats() {
+            const students = getPlacedStudents();
+            let available = 0, maxed = 0, totalStars = 0;
+            students.forEach(s => {
+                const stars = getStudentStars(s.name);
+                if (stars >= bankvalMaxStarsVal) maxed++;
+                else available++;
+                totalStars += stars;
+            });
+            document.getElementById('bvStatAvailable').textContent = available;
+            document.getElementById('bvStatMaxed').textContent = maxed;
+            document.getElementById('bvStatTotal').textContent = totalStars;
+        }
+
+        function selectBankvalStudent() {
+            const students = getPlacedStudents();
+            const available = students.filter(s => getStudentStars(s.name) < bankvalMaxStarsVal);
+            if (available.length === 0) return null;
+
+            let selected;
+            switch (bankvalMode) {
+                case 'fair':
+                    const minStars = Math.min(...available.map(s => getStudentStars(s.name)));
+                    const eligible = available.filter(s => getStudentStars(s.name) === minStars);
+                    selected = eligible[Math.floor(Math.random() * eligible.length)];
+                    break;
+                case 'weighted':
+                    const maxFound = Math.max(...available.map(s => getStudentStars(s.name)));
+                    const weights = available.map(s => maxFound - getStudentStars(s.name) + 1);
+                    const totalWeight = weights.reduce((a, b) => a + b, 0);
+                    let rand = Math.random() * totalWeight;
+                    let cumulative = 0;
+                    for (let i = 0; i < available.length; i++) {
+                        cumulative += weights[i];
+                        if (rand <= cumulative) { selected = available[i]; break; }
+                    }
+                    if (!selected) selected = available[0];
+                    break;
+                case 'random':
+                default:
+                    selected = available[Math.floor(Math.random() * available.length)];
+            }
+            return selected;
+        }
+
+        async function animateBankvalSelection() {
+            const students = getPlacedStudents();
+            const available = students.filter(s => getStudentStars(s.name) < bankvalMaxStarsVal);
+            if (available.length === 0) {
+                showBankvalToast('Alla elever har nått max stjärnor!');
+                return;
+            }
+
+            const btn = document.getElementById('bankvalRandomBtn');
+            btn.disabled = true;
+            const display = document.getElementById('bankvalDisplay');
+
+            // Phase: rapid cycling, highlighting many then fewer seats
+            const totalSteps = 22;
+            for (let i = 0; i < totalSteps; i++) {
+                const highlightCount = Math.max(1, Math.floor(available.length * (1 - (i / totalSteps) * 0.9)));
+                const shuffled = [...available].sort(() => Math.random() - 0.5);
+                const highlighted = shuffled.slice(0, highlightCount);
+
+                document.querySelectorAll('.bv-seat').forEach(el => el.classList.remove('spinning-preview'));
+                highlighted.forEach(s => {
+                    const seat = document.querySelector(`.bv-seat[data-row="${s.row}"][data-col="${s.col}"]`);
+                    if (seat && !seat.classList.contains('maxed')) seat.classList.add('spinning-preview');
+                });
+
+                const randomStudent = highlighted[Math.floor(Math.random() * highlighted.length)];
+                display.textContent = randomStudent.name;
+                display.classList.add('spinning');
+
+                const delay = 60 + (i * i * 1.8);
+                await bankvalSleep(delay);
+                display.classList.remove('spinning');
+            }
+
+            document.querySelectorAll('.bv-seat').forEach(el => el.classList.remove('spinning-preview'));
+
+            const finalStudent = selectBankvalStudent();
+            if (finalStudent) {
+                bankvalSelectedName = finalStudent.name;
+                addStudentStar(finalStudent.name);
+                display.textContent = finalStudent.name;
+                const isMaxed = getStudentStars(finalStudent.name) >= bankvalMaxStarsVal;
+                display.classList.toggle('golden', isMaxed);
+                renderBankvalGrid();
+                updateBankvalStats();
+                saveBankvalState();
+            }
+            btn.disabled = false;
+        }
+
+        function bankvalSleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+        function showBankvalToast(message) {
+            const toast = document.getElementById('bankvalToast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function resetBankvalStars() {
+            if (confirm('Nollställ alla stjärnor för denna klass?')) {
+                bankvalStudentData[currentClass] = {};
+                bankvalSelectedName = null;
+                document.getElementById('bankvalDisplay').textContent = '—';
+                document.getElementById('bankvalDisplay').classList.remove('golden');
+                renderBankvalGrid();
+                updateBankvalStats();
+                saveBankvalState();
+                showBankvalToast('Stjärnor nollställda!');
+            }
+        }
+
+        function setupBankvalListeners() {
+            document.getElementById('bankvalToggle').addEventListener('click', toggleBankval);
+            document.getElementById('bankvalRandomBtn').addEventListener('click', animateBankvalSelection);
+            document.getElementById('bankvalClose').addEventListener('click', toggleBankval);
+            document.getElementById('bankvalResetStars').addEventListener('click', resetBankvalStars);
+
+            document.querySelectorAll('.bv-mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.bv-mode-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    bankvalMode = btn.dataset.mode;
+                    saveBankvalState();
+                });
+            });
+
+            document.getElementById('bankvalMaxStars').addEventListener('change', (e) => {
+                bankvalMaxStarsVal = parseInt(e.target.value) || 3;
+                renderBankvalGrid();
+                updateBankvalStats();
+                saveBankvalState();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && bankvalActive && !document.getElementById('bankvalRandomBtn').disabled) {
+                    e.preventDefault();
+                    animateBankvalSelection();
+                }
+            });
+
+            // Refresh bankval grid when class changes
+            classSelect.addEventListener('change', () => {
+                if (bankvalActive) {
+                    setTimeout(() => {
+                        renderBankvalGrid();
+                        updateBankvalStats();
+                        bankvalSelectedName = null;
+                        document.getElementById('bankvalDisplay').textContent = '—';
+                        document.getElementById('bankvalDisplay').classList.remove('golden');
+                    }, 150);
+                }
+            });
+
+            // Close on Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && bankvalActive) {
+                    toggleBankval();
+                }
+            });
+        }
+
+        setupBankvalListeners();
+        loadBankvalState();
 
         init();
     </script>
