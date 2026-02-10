@@ -1831,6 +1831,32 @@
                     grid.appendChild(cell);
                 }
             }
+            autoFitBankvalFontSize();
+        }
+
+        function autoFitBankvalFontSize() {
+            const cells = document.querySelectorAll('.bv-seat:not(.removed):not(.empty)');
+            if (!cells.length) return;
+            const cellW = cells[0].offsetWidth;
+            if (!cellW) return;
+            const availW = cellW - 12;
+            const names = [];
+            document.querySelectorAll('#bankvalGrid .bv-name').forEach(s => names.push(s.textContent));
+            if (!names.length) return;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            let lo = 7, hi = 18;
+            while (hi - lo > 0.5) {
+                const mid = (lo + hi) / 2;
+                ctx.font = `600 ${mid}px Inter, -apple-system, sans-serif`;
+                const maxTextW = Math.max(...names.map(n => ctx.measureText(n).width));
+                if (maxTextW <= availW) lo = mid;
+                else hi = mid;
+            }
+            const optimalSize = Math.floor(lo * 10) / 10;
+            document.querySelectorAll('#bankvalGrid .bv-name').forEach(s => {
+                s.style.fontSize = optimalSize + 'px';
+            });
         }
 
         function updateBankvalStats() {
