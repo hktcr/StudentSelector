@@ -738,6 +738,8 @@
             align-items: center;
             flex: 1;
             min-height: 0;
+            width: 100%;
+            align-self: stretch;
         }
 
         .bankval-grid-wrapper::before {
@@ -1825,31 +1827,23 @@
         }
 
         function calcBankvalSeatSize() {
-            const wrapper = document.querySelector('.bankval-grid-wrapper');
-            if (!wrapper || !wrapper.clientWidth || !wrapper.clientHeight) {
-                // Fallback if not rendered yet
-                const sidebarW = document.querySelector('.bankval-controls.collapsed') ? 0 : 210;
-                const topAreaH = 140;
-                const gapSize = 5;
-                const cols = currentLayout.cols;
-                const rows = currentLayout.rows;
-                const availW = window.innerWidth - sidebarW - 40 - (cols - 1) * gapSize;
-                const availH = window.innerHeight - topAreaH - 40 - (rows - 1) * gapSize;
-                const maxW = Math.floor(availW / cols);
-                const maxH = Math.floor(availH / rows);
-                let w = Math.min(maxW, maxH * 2);
-                let h = Math.floor(w / 2);
-                w = Math.max(70, Math.min(w, 300));
-                h = Math.max(35, Math.min(h, 150));
-                return { width: w, height: h };
-            }
+            // Use displayArea dimensions - the actual available space
+            const displayArea = document.querySelector('.bankval-display-area');
+            const gridWrapper = document.querySelector('.bankval-grid-wrapper');
             const gapSize = 5;
             const cols = currentLayout.cols;
             const rows = currentLayout.rows;
-            const availW = wrapper.clientWidth - 20 - (cols - 1) * gapSize;
-            const availH = wrapper.clientHeight - 30 - (rows - 1) * gapSize;
+            // Width: use displayArea width (the full right panel)
+            const wrapperPadH = 20;
+            const areaW = displayArea ? displayArea.clientWidth : (window.innerWidth - 220);
+            const availW = areaW - wrapperPadH - (cols - 1) * gapSize;
+            // Height: use gridWrapper if available, else estimate
+            const wrapperPadV = 40;
+            const wrapperH = gridWrapper ? gridWrapper.clientHeight : (window.innerHeight - 180);
+            const availH = Math.max(wrapperH, 300) - wrapperPadV - (rows - 1) * gapSize;
             const maxW = Math.floor(availW / cols);
             const maxH = Math.floor(availH / rows);
+            // Respect 2:1 aspect ratio
             let w = Math.min(maxW, maxH * 2);
             let h = Math.floor(w / 2);
             w = Math.max(70, Math.min(w, 300));
