@@ -1798,20 +1798,29 @@
         }
 
         function calcBankvalSeatSize() {
-            const wrapper = document.querySelector('.bankval-grid-wrapper');
-            if (!wrapper) return 110;
-            const availW = wrapper.clientWidth - 30;
-            const cols = currentLayout.cols;
+            const sidebarW = 200;
+            const topAreaH = 160; // header + result + button + history
+            const gridPad = 40;
             const gapSize = 6;
-            const maxW = Math.floor((availW - (cols - 1) * gapSize) / cols);
-            return Math.max(80, Math.min(maxW, 180));
+            const cols = currentLayout.cols;
+            const rows = currentLayout.rows;
+            const availW = window.innerWidth - sidebarW - gridPad - (cols - 1) * gapSize;
+            const availH = window.innerHeight - topAreaH - gridPad - (rows - 1) * gapSize;
+            const maxW = Math.floor(availW / cols);
+            const maxH = Math.floor(availH / rows);
+            // Respect 2:1 aspect ratio — pick the constraint that limits us
+            let w = Math.min(maxW, maxH * 2);
+            let h = Math.floor(w / 2);
+            w = Math.max(70, Math.min(w, 300));
+            h = Math.max(35, Math.min(h, 150));
+            return { width: w, height: h };
         }
 
         function renderBankvalGrid() {
             const grid = document.getElementById('bankvalGrid');
             grid.innerHTML = '';
-            const seatW = calcBankvalSeatSize();
-            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, ${seatW}px)`;
+            const size = calcBankvalSeatSize();
+            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, ${size.width}px)`;
 
             for (let row = 0; row < currentLayout.rows; row++) {
                 for (let col = 0; col < currentLayout.cols; col++) {
@@ -1819,6 +1828,8 @@
                     const isRemoved = currentLayout.removedSeats && currentLayout.removedSeats.includes(seatKey);
                     const cell = document.createElement('div');
                     cell.className = 'bv-seat';
+                    cell.style.width = size.width + 'px';
+                    cell.style.height = size.height + 'px';
                     cell.dataset.row = row;
                     cell.dataset.col = col;
 
