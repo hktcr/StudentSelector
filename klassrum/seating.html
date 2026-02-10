@@ -583,10 +583,9 @@
 
         .bankval-body {
             width: 100%;
-            max-width: 1100px;
             display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 220px 1fr;
+            gap: 1rem;
             flex: 1;
         }
 
@@ -710,11 +709,12 @@
         .bankval-grid-wrapper {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 16px;
-            padding: 2rem 1rem 1rem;
+            padding: 1.5rem 0.75rem 0.75rem;
             position: relative;
             overflow: auto;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         .bankval-grid-wrapper::before {
@@ -734,13 +734,12 @@
 
         .bankval-grid {
             display: grid;
-            gap: 0.5rem;
+            gap: clamp(0.3rem, 0.5vw, 0.5rem);
             margin-top: 0.5rem;
         }
 
         .bv-seat {
-            width: 110px;
-            height: 55px;
+            aspect-ratio: 2 / 1;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1797,10 +1796,21 @@
             }
         }
 
+        function calcBankvalSeatSize() {
+            const wrapper = document.querySelector('.bankval-grid-wrapper');
+            if (!wrapper) return 110;
+            const availW = wrapper.clientWidth - 30;
+            const cols = currentLayout.cols;
+            const gapSize = 6;
+            const maxW = Math.floor((availW - (cols - 1) * gapSize) / cols);
+            return Math.max(80, Math.min(maxW, 180));
+        }
+
         function renderBankvalGrid() {
             const grid = document.getElementById('bankvalGrid');
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 1fr)`;
+            const seatW = calcBankvalSeatSize();
+            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, ${seatW}px)`;
 
             for (let row = 0; row < currentLayout.rows; row++) {
                 for (let col = 0; col < currentLayout.cols; col++) {
