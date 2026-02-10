@@ -813,9 +813,9 @@
         }
 
         .bv-seat.spinning-preview {
-            background: rgba(168, 85, 247, 0.5);
-            border-color: #a855f7;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            background: rgba(250, 204, 21, 0.55);
+            border-color: #facc15;
+            box-shadow: 0 0 18px rgba(250, 204, 21, 0.6);
         }
 
         .bv-section-label {
@@ -964,6 +964,149 @@
             color: white;
             box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
         }
+
+        /* VEP #4: Ingångsanimation för valt namn */
+        .bankval-result-name.reveal {
+            animation: bvReveal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bvReveal {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* VEP #2: Hjälptext */
+        .bankval-result-name.hint {
+            font-size: 1.1rem;
+            font-weight: 500;
+            -webkit-text-fill-color: #64748b;
+        }
+
+        /* VEP #7: Pulsanimation på idle-knapp */
+        .bankval-random-btn:not(:disabled) {
+            animation: bvBtnPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes bvBtnPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 4px 30px rgba(99, 102, 241, 0.7), 0 0 40px rgba(168, 85, 247, 0.3);
+            }
+        }
+
+        .bankval-random-btn:disabled {
+            animation: none;
+        }
+
+        /* VEP #5: Historik */
+        .bv-history {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .bv-history-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .bv-history-list {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .bv-history-item {
+            padding: 0.25rem 0.6rem;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #a5b4fc;
+        }
+
+        .bv-history-item:first-child {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: #6366f1;
+            color: #c7d2fe;
+        }
+
+        /* VEP #6: Ångra-knapp */
+        .bv-undo-btn {
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bv-undo-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f0f0f5;
+        }
+
+        .bv-undo-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* VEP #9: Konfetti */
+        .bv-confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1050;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: bvConfettiFall 1.2s ease-out forwards;
+        }
+
+        @keyframes bvConfettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(200px) rotate(720deg) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* VEP #1: Klassnamn i header */
+        .bankval-class-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #a5b4fc;
+            background: rgba(99, 102, 241, 0.15);
+            padding: 0.25rem 0.8rem;
+            border-radius: 8px;
+            margin-left: 0.75rem;
+        }
     </style>
 </head>
 
@@ -1058,7 +1201,7 @@
     <!-- Bänkväljare Overlay -->
     <div id="bankvalOverlay" class="bankval-overlay">
         <div class="bankval-header">
-            <h2>🎯 Bänkväljare</h2>
+            <h2>🎯 Bänkväljare <span class="bankval-class-name" id="bankvalClassName"></span></h2>
             <button id="bankvalClose" class="bankval-close">✕</button>
         </div>
         <div class="bankval-body">
@@ -1090,6 +1233,7 @@
                     </div>
                 </div>
 
+                <button class="bv-undo-btn" id="bankvalUndo" disabled>⟲ Ångra senaste</button>
                 <button class="bv-reset-btn" id="bankvalResetStars">↻ Nollställ stjärnor</button>
 
                 <div class="bv-info">
@@ -1103,9 +1247,14 @@
             <div class="bankval-display-area">
                 <div class="bankval-result">
                     <div class="bankval-result-label">Vald elev</div>
-                    <div class="bankval-result-name" id="bankvalDisplay">—</div>
+                    <div class="bankval-result-name hint" id="bankvalDisplay" aria-live="polite">Tryck mellanslag eller
+                        klicka nedan ⬇</div>
                 </div>
                 <button class="bankval-random-btn" id="bankvalRandomBtn">🎯 Slumpa elev</button>
+                <div class="bv-history" id="bankvalHistory" style="display:none">
+                    <div class="bv-history-label">Senaste valda</div>
+                    <div class="bv-history-list" id="bankvalHistoryList"></div>
+                </div>
                 <div class="bankval-grid-wrapper">
                     <div class="bankval-grid" id="bankvalGrid"></div>
                 </div>
@@ -1478,12 +1627,14 @@
             window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModals(); });
         }
 
-        // === Bänkväljare Integration ===
+        // === Bänkväljare Integration (VEP-Enhanced) ===
         let bankvalActive = false;
         let bankvalMode = 'fair';
         let bankvalMaxStarsVal = 3;
         let bankvalStudentData = {};
         let bankvalSelectedName = null;
+        let bankvalHistory = [];  // VEP #5
+        let bankvalLastPick = null; // VEP #6
 
         function loadBankvalState() {
             const saved = localStorage.getItem('bankval_state');
@@ -1492,18 +1643,21 @@
                 bankvalMode = state.mode || 'fair';
                 bankvalMaxStarsVal = state.maxStars || 3;
                 bankvalStudentData = state.studentData || {};
+                bankvalHistory = state.history || [];
             }
             document.getElementById('bankvalMaxStars').value = bankvalMaxStarsVal;
             document.querySelectorAll('.bv-mode-btn').forEach(b => {
                 b.classList.toggle('active', b.dataset.mode === bankvalMode);
             });
+            renderBankvalHistory();
         }
 
         function saveBankvalState() {
             localStorage.setItem('bankval_state', JSON.stringify({
                 mode: bankvalMode,
                 maxStars: bankvalMaxStarsVal,
-                studentData: bankvalStudentData
+                studentData: bankvalStudentData,
+                history: bankvalHistory
             }));
         }
 
@@ -1535,6 +1689,12 @@
             bankvalStudentData[currentClass][name].stars++;
         }
 
+        // VEP #1: Visa klassnamn
+        function updateBankvalClassName() {
+            const className = classData[currentClass]?.name || currentClass;
+            document.getElementById('bankvalClassName').textContent = className;
+        }
+
         function toggleBankval() {
             bankvalActive = !bankvalActive;
             const overlay = document.getElementById('bankvalOverlay');
@@ -1543,6 +1703,7 @@
                 overlay.classList.add('active');
                 toggleBtn.classList.add('active');
                 loadBankvalState();
+                updateBankvalClassName();
                 renderBankvalGrid();
                 updateBankvalStats();
             } else {
@@ -1632,6 +1793,46 @@
             return selected;
         }
 
+        // VEP #5: Historik
+        function renderBankvalHistory() {
+            const container = document.getElementById('bankvalHistory');
+            const list = document.getElementById('bankvalHistoryList');
+            const classHistory = bankvalHistory.filter(h => h.cls === currentClass);
+            if (classHistory.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'block';
+            list.innerHTML = '';
+            classHistory.slice(-5).reverse().forEach(h => {
+                const item = document.createElement('span');
+                item.className = 'bv-history-item';
+                item.textContent = h.name;
+                list.appendChild(item);
+            });
+        }
+
+        // VEP #9: Konfetti
+        function spawnConfetti() {
+            const colors = ['#6366f1', '#a855f7', '#f59e0b', '#10b981', '#ef4444', '#3b82f6'];
+            const display = document.getElementById('bankvalDisplay');
+            const rect = display.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bv-confetti';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = `${cx + (Math.random() - 0.5) * 200}px`;
+                particle.style.top = `${cy + (Math.random() - 0.5) * 60}px`;
+                particle.style.width = `${6 + Math.random() * 8}px`;
+                particle.style.height = `${6 + Math.random() * 8}px`;
+                particle.style.animationDuration = `${0.8 + Math.random() * 0.8}s`;
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1600);
+            }
+        }
+
         async function animateBankvalSelection() {
             const students = getPlacedStudents();
             const available = students.filter(s => getStudentStars(s.name) < bankvalMaxStarsVal);
@@ -1642,10 +1843,14 @@
 
             const btn = document.getElementById('bankvalRandomBtn');
             btn.disabled = true;
+            // VEP #3: Spinner-text på knappen
+            const origBtnText = btn.textContent;
+            btn.textContent = '⏳ Slumpar...';
             const display = document.getElementById('bankvalDisplay');
+            display.classList.remove('hint', 'reveal', 'golden');
 
             // Phase: rapid cycling, highlighting many then fewer seats
-            const totalSteps = 22;
+            const totalSteps = 15;
             for (let i = 0; i < totalSteps; i++) {
                 const highlightCount = Math.max(1, Math.floor(available.length * (1 - (i / totalSteps) * 0.9)));
                 const shuffled = [...available].sort(() => Math.random() - 0.5);
@@ -1661,7 +1866,7 @@
                 display.textContent = randomStudent.name;
                 display.classList.add('spinning');
 
-                const delay = 60 + (i * i * 1.8);
+                const delay = 40 + (i * i * 1.2);
                 await bankvalSleep(delay);
                 display.classList.remove('spinning');
             }
@@ -1671,15 +1876,59 @@
             const finalStudent = selectBankvalStudent();
             if (finalStudent) {
                 bankvalSelectedName = finalStudent.name;
+                bankvalLastPick = { name: finalStudent.name, cls: currentClass }; // VEP #6
                 addStudentStar(finalStudent.name);
+
+                // VEP #5: Historik
+                bankvalHistory.push({ name: finalStudent.name, cls: currentClass, time: Date.now() });
+                if (bankvalHistory.length > 50) bankvalHistory = bankvalHistory.slice(-50);
+
                 display.textContent = finalStudent.name;
                 const isMaxed = getStudentStars(finalStudent.name) >= bankvalMaxStarsVal;
                 display.classList.toggle('golden', isMaxed);
+
+                // VEP #4: Reveal-animation
+                display.classList.add('reveal');
+                setTimeout(() => display.classList.remove('reveal'), 600);
+
+                // VEP #9: Konfetti
+                spawnConfetti();
+
                 renderBankvalGrid();
                 updateBankvalStats();
+                renderBankvalHistory();
                 saveBankvalState();
+
+                // VEP #6: Aktivera ångra-knapp
+                document.getElementById('bankvalUndo').disabled = false;
             }
+
+            btn.textContent = origBtnText;
             btn.disabled = false;
+        }
+
+        // VEP #6: Ångra senaste
+        function undoLastPick() {
+            if (!bankvalLastPick) return;
+            const { name, cls } = bankvalLastPick;
+            if (bankvalStudentData[cls] && bankvalStudentData[cls][name]) {
+                bankvalStudentData[cls][name].stars = Math.max(0, bankvalStudentData[cls][name].stars - 1);
+            }
+            // Ta bort från historik
+            const idx = bankvalHistory.findLastIndex(h => h.name === name && h.cls === cls);
+            if (idx > -1) bankvalHistory.splice(idx, 1);
+            bankvalLastPick = null;
+            bankvalSelectedName = null;
+            document.getElementById('bankvalUndo').disabled = true;
+            const display = document.getElementById('bankvalDisplay');
+            display.textContent = 'Tryck mellanslag eller klicka nedan ⬇';
+            display.classList.add('hint');
+            display.classList.remove('golden');
+            renderBankvalGrid();
+            updateBankvalStats();
+            renderBankvalHistory();
+            saveBankvalState();
+            showBankvalToast('Senaste valet ångrat!');
         }
 
         function bankvalSleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
@@ -1695,10 +1944,16 @@
             if (confirm('Nollställ alla stjärnor för denna klass?')) {
                 bankvalStudentData[currentClass] = {};
                 bankvalSelectedName = null;
-                document.getElementById('bankvalDisplay').textContent = '—';
-                document.getElementById('bankvalDisplay').classList.remove('golden');
+                bankvalLastPick = null;
+                bankvalHistory = bankvalHistory.filter(h => h.cls !== currentClass);
+                const display = document.getElementById('bankvalDisplay');
+                display.textContent = 'Tryck mellanslag eller klicka nedan ⬇';
+                display.classList.add('hint');
+                display.classList.remove('golden');
+                document.getElementById('bankvalUndo').disabled = true;
                 renderBankvalGrid();
                 updateBankvalStats();
+                renderBankvalHistory();
                 saveBankvalState();
                 showBankvalToast('Stjärnor nollställda!');
             }
@@ -1709,6 +1964,7 @@
             document.getElementById('bankvalRandomBtn').addEventListener('click', animateBankvalSelection);
             document.getElementById('bankvalClose').addEventListener('click', toggleBankval);
             document.getElementById('bankvalResetStars').addEventListener('click', resetBankvalStars);
+            document.getElementById('bankvalUndo').addEventListener('click', undoLastPick); // VEP #6
 
             document.querySelectorAll('.bv-mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1737,11 +1993,17 @@
             classSelect.addEventListener('change', () => {
                 if (bankvalActive) {
                     setTimeout(() => {
+                        updateBankvalClassName();
                         renderBankvalGrid();
                         updateBankvalStats();
+                        renderBankvalHistory();
                         bankvalSelectedName = null;
-                        document.getElementById('bankvalDisplay').textContent = '—';
-                        document.getElementById('bankvalDisplay').classList.remove('golden');
+                        bankvalLastPick = null;
+                        document.getElementById('bankvalUndo').disabled = true;
+                        const display = document.getElementById('bankvalDisplay');
+                        display.textContent = 'Tryck mellanslag eller klicka nedan ⬇';
+                        display.classList.add('hint');
+                        display.classList.remove('golden');
                     }, 150);
                 }
             });
