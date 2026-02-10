@@ -207,6 +207,8 @@
         .classroom-wrapper {
             flex: 1;
             display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: auto;
             min-height: 0;
         }
@@ -217,9 +219,6 @@
             padding: clamp(0.75rem, 1.5vw, 1.5rem);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-soft);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
         }
 
         .tavla {
@@ -245,16 +244,12 @@
 
         .seating-grid {
             display: grid;
-            gap: clamp(0.4rem, 0.7vw, 0.75rem);
-            width: 100%;
-            flex: 1;
-            align-content: center;
+            gap: clamp(0.3rem, 0.5vw, 0.6rem);
+            justify-content: center;
         }
 
         .seat {
-            width: 100%;
-            min-width: 80px;
-            height: clamp(48px, 8vh, 80px);
+            aspect-ratio: 2 / 1;
             background: var(--bg-card);
             border: 2px solid var(--border-color);
             border-radius: var(--radius-sm);
@@ -1391,15 +1386,41 @@
             }));
         }
 
+        function calcSeatSize() {
+            const wrapper = document.querySelector('.classroom-wrapper');
+            if (!wrapper) return { width: 120, height: 60 };
+            const headerH = 60;
+            const tavlaH = 50;
+            const padV = 50;
+            const padH = 60;
+            const gapSize = 6;
+            const sidebarL = document.querySelector('.sidebar')?.offsetWidth || 0;
+            const sidebarR = document.querySelector('.sidebar-right')?.offsetWidth || 0;
+            const availW = window.innerWidth - sidebarL - sidebarR - padH - (currentLayout.cols - 1) * gapSize;
+            const availH = window.innerHeight - headerH - tavlaH - padV - (currentLayout.rows - 1) * gapSize;
+            const maxW = Math.floor(availW / currentLayout.cols);
+            const maxH = Math.floor(availH / currentLayout.rows);
+            // Respect 2:1 aspect ratio
+            let w = Math.min(maxW, maxH * 2);
+            let h = Math.floor(w / 2);
+            // Clamp to reasonable bounds
+            w = Math.max(80, Math.min(w, 200));
+            h = Math.max(40, Math.min(h, 100));
+            return { width: w, height: h };
+        }
+
         function renderGrid() {
             seatingGrid.innerHTML = '';
-            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 1fr)`;
+            const size = calcSeatSize();
+            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, ${size.width}px)`;
             for (let row = 0; row < currentLayout.rows; row++) {
                 for (let col = 0; col < currentLayout.cols; col++) {
                     const seatKey = `${row}-${col}`;
                     const isRemoved = currentLayout.removedSeats.includes(seatKey);
                     const seat = document.createElement('div');
                     seat.className = 'seat';
+                    seat.style.width = size.width + 'px';
+                    seat.style.height = size.height + 'px';
                     seat.dataset.row = row;
                     seat.dataset.col = col;
                     if (isRemoved) {
@@ -1423,6 +1444,21 @@
                 }
             }
         }
+
+        function applySeatSizes() {
+            const size = calcSeatSize();
+            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, ${size.width}px)`;
+            document.querySelectorAll('.seat').forEach(s => {
+                s.style.width = size.width + 'px';
+                s.style.height = size.height + 'px';
+            });
+        }
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(applySeatSizes, 150);
+        });
 
         function toggleSeatRemoved(row, col) {
             const seatKey = `${row}-${col}`;
@@ -1613,11 +1649,7 @@
 
         // Update grid columns on fullscreen change
         document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 160px)`;
-            } else {
-                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 1fr)`;
-            }
+            setTimeout(applySeatSizes, 100);
         });
 
         exportBtn.addEventListener('click', async () => {
