@@ -207,19 +207,19 @@
         .classroom-wrapper {
             flex: 1;
             display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: auto;
+            min-height: 0;
         }
 
         .classroom {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: clamp(0.75rem, 2vw, 2rem);
+            padding: clamp(0.75rem, 1.5vw, 1.5rem);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-soft);
-            width: 100%;
-            max-width: fit-content;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .tavla {
@@ -247,12 +247,14 @@
             display: grid;
             gap: clamp(0.4rem, 0.7vw, 0.75rem);
             width: 100%;
+            flex: 1;
+            align-content: center;
         }
 
         .seat {
             width: 100%;
-            min-width: 90px;
-            height: clamp(50px, 6vh, 75px);
+            min-width: 80px;
+            height: clamp(48px, 8vh, 80px);
             background: var(--bg-card);
             border: 2px solid var(--border-color);
             border-radius: var(--radius-sm);
