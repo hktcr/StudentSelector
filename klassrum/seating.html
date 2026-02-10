@@ -245,12 +245,14 @@
 
         .seating-grid {
             display: grid;
-            gap: clamp(0.35rem, 0.6vw, 0.75rem);
+            gap: clamp(0.4rem, 0.7vw, 0.75rem);
+            width: 100%;
         }
 
         .seat {
-            width: clamp(90px, 10vw, 150px);
-            height: clamp(48px, 5vw, 68px);
+            width: 100%;
+            min-width: 90px;
+            height: clamp(50px, 6vh, 75px);
             background: var(--bg-card);
             border: 2px solid var(--border-color);
             border-radius: var(--radius-sm);
@@ -1389,7 +1391,7 @@
 
         function renderGrid() {
             seatingGrid.innerHTML = '';
-            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, clamp(90px, 10vw, 150px))`;
+            seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 1fr)`;
             for (let row = 0; row < currentLayout.rows; row++) {
                 for (let col = 0; col < currentLayout.cols; col++) {
                     const seatKey = `${row}-${col}`;
@@ -1612,7 +1614,7 @@
             if (document.fullscreenElement) {
                 seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 160px)`;
             } else {
-                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, clamp(90px, 10vw, 150px))`;
+                seatingGrid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 1fr)`;
             }
         });
 
@@ -1733,7 +1735,7 @@
         function renderBankvalGrid() {
             const grid = document.getElementById('bankvalGrid');
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, clamp(70px, 7vw, 110px))`;
+            grid.style.gridTemplateColumns = `repeat(${currentLayout.cols}, 1fr)`;
 
             for (let row = 0; row < currentLayout.rows; row++) {
                 for (let col = 0; col < currentLayout.cols; col++) {
