@@ -1176,19 +1176,19 @@
         .group-saved-item .group-saved-delete:hover { opacity:1; }
         .group-display { flex:1; display:flex; flex-direction:column; gap:0.75rem; min-height:0; overflow-y:auto; }
         .group-display-empty { display:flex; align-items:center; justify-content:center; flex:1; color:#64748b; font-size:1rem; font-style:italic; }
-        .group-cards { display:grid; gap:0.75rem; padding-bottom:1rem; }
-        .group-card { background:var(--gc-bg); border:none; border-radius:16px; padding:1rem; transition:all 0.3s; min-height:90px; box-shadow:0 2px 12px rgba(0,0,0,0.15); }
+        .group-cards { display:grid; gap:0.75rem; padding-bottom:1rem; align-items:stretch; }
+        .group-card { background:var(--gc-bg); border:none; border-radius:16px; padding:1rem 1.2rem; transition:all 0.3s; min-height:90px; box-shadow:0 2px 12px rgba(0,0,0,0.15); display:flex; flex-direction:column; }
         .group-card:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,0,0,0.25); }
         .group-card.drag-over-card { outline:3px dashed rgba(255,255,255,0.6); outline-offset:2px; box-shadow:0 0 25px rgba(255,255,255,0.15); transform:scale(1.02); }
-        .group-card-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem; padding-bottom:0.5rem; border-bottom:1px solid var(--gc-border); }
+        .group-card-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; padding-bottom:0.4rem; border-bottom:1px solid var(--gc-border); flex-shrink:0; }
         .group-card-dot { display:none; }
-        .group-card-title { font-weight:800; font-size:1.05rem; color:var(--gc-text); cursor:text; letter-spacing:0.01em; }
+        .group-card-title { font-weight:800; color:var(--gc-text); cursor:text; letter-spacing:0.01em; }
         .group-card-title:hover { text-decoration:underline dotted; }
-        .group-card-count { margin-left:auto; font-size:0.7rem; color:var(--gc-text); background:var(--gc-border); padding:0.2rem 0.6rem; border-radius:6px; font-weight:600; }
-        .group-card-delete { background:none; border:none; color:var(--gc-text); cursor:pointer; font-size:0.8rem; opacity:0.5; transition:opacity 0.2s; padding:0 0.3rem; margin-left:0.3rem; }
+        .group-card-count { margin-left:auto; color:var(--gc-text); background:var(--gc-border); padding:0.2rem 0.6rem; border-radius:6px; font-weight:600; white-space:nowrap; }
+        .group-card-delete { background:none; border:none; color:var(--gc-text); cursor:pointer; opacity:0.5; transition:opacity 0.2s; padding:0 0.3rem; margin-left:0.3rem; }
         .group-card-delete:hover { opacity:1; }
-        .group-card-members { display:flex; flex-direction:column; gap:0.35rem; min-height:30px; }
-        .group-card-member { padding:0.45rem 0.7rem; background:var(--gc-member-bg); border-radius:8px; font-size:0.85rem; font-weight:600; color:var(--gc-text); transition:all 0.15s; cursor:grab; user-select:none; display:flex; justify-content:space-between; align-items:center; }
+        .group-card-members { display:flex; flex-direction:column; gap:0.4rem; flex:1; justify-content:center; }
+        .group-card-member { padding:0.5rem 0.8rem; background:var(--gc-member-bg); border-radius:10px; font-weight:600; color:var(--gc-text); transition:all 0.15s; cursor:grab; user-select:none; display:flex; justify-content:space-between; align-items:center; }
         .group-card-member:hover { background:var(--gc-member-hover); }
         .group-card-member.dragging-member { opacity:0.4; transform:scale(0.95); }
         .group-card-member .member-remove { background:none; border:none; color:var(--gc-text); cursor:pointer; font-size:0.7rem; opacity:0; transition:opacity 0.15s; padding:0 0.2rem; }
@@ -2453,6 +2453,42 @@
             html += '</div>';
             display.innerHTML = html;
             setupGroupDragDrop();
+            requestAnimationFrame(autoFitGroupText);
+        }
+
+        function autoFitGroupText() {
+            const cards = document.querySelectorAll('#groupDisplay .group-card');
+            if (cards.length === 0) return;
+            // Find max members across all groups for consistent sizing
+            const maxMembers = Math.max(...groupCurrentGroups.map(g => g.members.length), 1);
+            const nGroups = groupCurrentGroups.length;
+            // Calculate available height per card
+            const displayEl = document.getElementById('groupDisplay');
+            const displayH = displayEl.clientHeight;
+            const unassignedH = document.getElementById('grpUnassignedZone')?.offsetHeight || 0;
+            const rows = Math.ceil(nGroups / (nGroups <= 2 ? nGroups : nGroups <= 6 ? (nGroups <= 4 ? 2 : 3) : (nGroups <= 9 ? 3 : 4)));
+            const availH = (displayH - unassignedH - (rows - 1) * 12) / rows; // 12px = gap
+            // Header takes ~40px, padding ~32px, gaps between members ~(maxMembers-1)*6px
+            const headerSpace = 48;
+            const memberAreaH = Math.max(availH - headerSpace, 60);
+            const memberSlotH = (memberAreaH - (maxMembers - 1) * 6) / Math.max(maxMembers, 1);
+            // Clamp font size: min 0.8rem, max 2rem, target = slot * 0.45
+            const fontSize = Math.min(2, Math.max(0.8, memberSlotH * 0.45 / 16)) * 16;
+            const titleSize = Math.min(1.6, Math.max(0.9, fontSize / 16 * 1.2)) * 16;
+            const countSize = Math.min(0.85, Math.max(0.55, fontSize / 16 * 0.6)) * 16;
+            const memberPad = Math.min(12, Math.max(4, memberSlotH * 0.15));
+            cards.forEach(card => {
+                card.querySelectorAll('.group-card-member').forEach(m => {
+                    m.style.fontSize = fontSize + 'px';
+                    m.style.padding = memberPad + 'px ' + (memberPad * 1.5) + 'px';
+                });
+                const title = card.querySelector('.group-card-title');
+                if (title) title.style.fontSize = titleSize + 'px';
+                const count = card.querySelector('.group-card-count');
+                if (count) count.style.fontSize = countSize + 'px';
+                const del = card.querySelector('.group-card-delete');
+                if (del) del.style.fontSize = countSize + 'px';
+            });
         }
 
         function setupGroupDragDrop() {
@@ -2628,6 +2664,7 @@
             }
         });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && groupActive) toggleGroupOverlay(); });
+        window.addEventListener('resize', () => { if (groupActive && groupCurrentGroups.length > 0) autoFitGroupText(); });
 
         init();
     </script>
