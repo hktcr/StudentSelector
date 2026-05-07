@@ -2317,29 +2317,23 @@
         setupBankvalListeners();
         loadBankvalState();
 
-        // === Gruppverktyg Integration ===
-        // 20 hand-tuned bg/text/border/member combos — WCAG AA contrast verified
+        // 15 clearly distinguishable colors for maximum visual separation
         const GROUP_THEMES = [
-            { bg:'#065f46', text:'#d1fae5', border:'rgba(167,243,208,0.25)', memberBg:'rgba(6,95,70,0.6)', memberHover:'rgba(6,95,70,0.8)' },
-            { bg:'#312e81', text:'#e0e7ff', border:'rgba(199,210,254,0.25)', memberBg:'rgba(49,46,129,0.6)', memberHover:'rgba(49,46,129,0.8)' },
-            { bg:'#92400e', text:'#fef3c7', border:'rgba(253,230,138,0.25)', memberBg:'rgba(146,64,14,0.6)', memberHover:'rgba(146,64,14,0.8)' },
-            { bg:'#991b1b', text:'#fee2e2', border:'rgba(254,202,202,0.25)', memberBg:'rgba(153,27,27,0.6)', memberHover:'rgba(153,27,27,0.8)' },
-            { bg:'#1e3a5f', text:'#dbeafe', border:'rgba(191,219,254,0.25)', memberBg:'rgba(30,58,95,0.6)', memberHover:'rgba(30,58,95,0.8)' },
-            { bg:'#581c87', text:'#f3e8ff', border:'rgba(233,213,255,0.25)', memberBg:'rgba(88,28,135,0.6)', memberHover:'rgba(88,28,135,0.8)' },
-            { bg:'#831843', text:'#fce7f3', border:'rgba(251,207,232,0.25)', memberBg:'rgba(131,24,67,0.6)', memberHover:'rgba(131,24,67,0.8)' },
-            { bg:'#134e4a', text:'#ccfbf1', border:'rgba(153,246,228,0.25)', memberBg:'rgba(19,78,74,0.6)', memberHover:'rgba(19,78,74,0.8)' },
-            { bg:'#7c2d12', text:'#ffedd5', border:'rgba(254,215,170,0.25)', memberBg:'rgba(124,45,18,0.6)', memberHover:'rgba(124,45,18,0.8)' },
-            { bg:'#365314', text:'#ecfccb', border:'rgba(217,249,157,0.25)', memberBg:'rgba(54,83,20,0.6)', memberHover:'rgba(54,83,20,0.8)' },
-            { bg:'#164e63', text:'#cffafe', border:'rgba(165,243,252,0.25)', memberBg:'rgba(22,78,99,0.6)', memberHover:'rgba(22,78,99,0.8)' },
-            { bg:'#4a1d96', text:'#ede9fe', border:'rgba(221,214,254,0.25)', memberBg:'rgba(74,29,150,0.6)', memberHover:'rgba(74,29,150,0.8)' },
-            { bg:'#1e40af', text:'#dbeafe', border:'rgba(191,219,254,0.25)', memberBg:'rgba(30,64,175,0.6)', memberHover:'rgba(30,64,175,0.8)' },
-            { bg:'#155e75', text:'#cffafe', border:'rgba(165,243,252,0.25)', memberBg:'rgba(21,94,117,0.6)', memberHover:'rgba(21,94,117,0.8)' },
-            { bg:'#713f12', text:'#fef9c3', border:'rgba(254,240,138,0.25)', memberBg:'rgba(113,63,18,0.6)', memberHover:'rgba(113,63,18,0.8)' },
-            { bg:'#3f1a5c', text:'#f5d0fe', border:'rgba(240,171,252,0.25)', memberBg:'rgba(63,26,92,0.6)', memberHover:'rgba(63,26,92,0.8)' },
-            { bg:'#064e3b', text:'#a7f3d0', border:'rgba(110,231,183,0.25)', memberBg:'rgba(6,78,59,0.6)', memberHover:'rgba(6,78,59,0.8)' },
-            { bg:'#78350f', text:'#fde68a', border:'rgba(253,224,71,0.25)', memberBg:'rgba(120,53,15,0.6)', memberHover:'rgba(120,53,15,0.8)' },
-            { bg:'#0f172a', text:'#e2e8f0', border:'rgba(148,163,184,0.25)', memberBg:'rgba(15,23,42,0.6)', memberHover:'rgba(15,23,42,0.8)' },
-            { bg:'#701a75', text:'#fae8ff', border:'rgba(245,208,254,0.25)', memberBg:'rgba(112,26,117,0.6)', memberHover:'rgba(112,26,117,0.8)' }
+            { bg:'#059669', text:'#ecfdf5', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Emerald
+            { bg:'#2563eb', text:'#eff6ff', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Royal Blue
+            { bg:'#ea580c', text:'#fff7ed', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Orange
+            { bg:'#7c3aed', text:'#f5f3ff', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Purple
+            { bg:'#e11d48', text:'#fff1f2', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Rose/Pink
+            { bg:'#0d9488', text:'#f0fdfa', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Teal
+            { bg:'#d97706', text:'#fffbeb', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Amber
+            { bg:'#0284c7', text:'#f0f9ff', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Light Blue
+            { bg:'#c026d3', text:'#fdf4ff', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Fuchsia
+            { bg:'#65a30d', text:'#f7fee7', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Lime
+            { bg:'#dc2626', text:'#fef2f2', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Red
+            { bg:'#4f46e5', text:'#eef2ff', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Indigo
+            { bg:'#9a3412', text:'#fff7ed', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Brown
+            { bg:'#475569', text:'#f8fafc', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }, // Slate
+            { bg:'#15803d', text:'#f0fdf4', border:'rgba(255,255,255,0.25)', memberBg:'rgba(0,0,0,0.2)', memberHover:'rgba(0,0,0,0.35)' }  // Dark Green
         ];
         let groupActive = false;
         let groupCurrentGroups = []; // [{name, members:[]}]
