@@ -1145,6 +1145,71 @@
             border-radius: 8px;
             margin-left: 0.75rem;
         }
+
+        /* === Gruppverktyg Overlay === */
+        .group-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,10,20,0.95); backdrop-filter:blur(12px); z-index:900; flex-direction:column; padding:1rem 1.5rem; overflow-y:auto; }
+        .group-overlay.active { display:flex; }
+        .group-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; }
+        .group-header h2 { font-size:1.5rem; font-weight:800; background:linear-gradient(135deg,#10b981,#34d399); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .group-class-name { font-size:0.85rem; font-weight:600; color:#6ee7b7; background:rgba(16,185,129,0.15); padding:0.25rem 0.8rem; border-radius:8px; margin-left:0.75rem; }
+        .group-close { background:none; border:1px solid rgba(255,255,255,0.2); color:#94a3b8; font-size:1.5rem; cursor:pointer; padding:0.4rem 0.8rem; border-radius:8px; transition:all 0.2s; }
+        .group-close:hover { color:#ef4444; border-color:#ef4444; }
+        .group-body { display:flex; gap:1rem; flex:1; min-height:0; overflow:hidden; }
+        .group-controls { width:260px; min-width:260px; background:rgba(30,30,50,0.8); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:1rem; display:flex; flex-direction:column; gap:0.75rem; height:fit-content; overflow-y:auto; max-height:calc(100vh - 100px); }
+        .group-section-label { font-size:0.75rem; color:#94a3b8; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; }
+        .group-input-row { display:flex; gap:0.5rem; align-items:center; }
+        .group-input-row label { font-size:0.75rem; color:#94a3b8; white-space:nowrap; }
+        .group-input-row input, .group-input-row select { padding:0.4rem 0.5rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#f0f0f5; font-size:0.9rem; font-weight:600; text-align:center; flex:1; }
+        .group-input-row input:focus, .group-input-row select:focus { outline:none; border-color:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,0.2); }
+        .group-generate-btn { width:100%; padding:0.6rem; font-size:1rem; font-weight:700; border:none; border-radius:10px; background:linear-gradient(135deg,#10b981,#34d399); color:white; cursor:pointer; box-shadow:0 4px 20px rgba(16,185,129,0.4); transition:all 0.2s; }
+        .group-generate-btn:hover { transform:translateY(-2px); box-shadow:0 6px 25px rgba(16,185,129,0.5); }
+        .group-generate-btn:active { transform:scale(0.98); }
+        .group-add-btn { width:100%; padding:0.5rem; font-size:0.85rem; font-weight:600; border:none; border-radius:8px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#6ee7b7; cursor:pointer; transition:all 0.2s; }
+        .group-add-btn:hover { background:rgba(16,185,129,0.25); }
+        .group-save-btn { width:100%; padding:0.5rem; font-size:0.85rem; font-weight:600; border:none; border-radius:8px; background:rgba(99,102,241,0.2); border:1px solid rgba(99,102,241,0.3); color:#a5b4fc; cursor:pointer; transition:all 0.2s; }
+        .group-save-btn:hover { background:rgba(99,102,241,0.3); }
+        .group-saved-list { display:flex; flex-direction:column; gap:0.3rem; max-height:180px; overflow-y:auto; }
+        .group-saved-item { display:flex; justify-content:space-between; align-items:center; padding:0.4rem 0.6rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:6px; cursor:pointer; transition:all 0.15s; font-size:0.75rem; color:#94a3b8; }
+        .group-saved-item:hover { background:rgba(16,185,129,0.1); border-color:rgba(16,185,129,0.3); color:#f0f0f5; }
+        .group-saved-item.active-saved { background:rgba(16,185,129,0.15); border-color:#10b981; color:#6ee7b7; }
+        .group-saved-item .group-saved-delete { background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.85rem; opacity:0.5; transition:opacity 0.2s; padding:0 0.3rem; }
+        .group-saved-item .group-saved-delete:hover { opacity:1; }
+        .group-display { flex:1; display:flex; flex-direction:column; gap:0.75rem; min-height:0; overflow-y:auto; }
+        .group-display-empty { display:flex; align-items:center; justify-content:center; flex:1; color:#64748b; font-size:1rem; font-style:italic; }
+        .group-cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:0.75rem; padding-bottom:1rem; }
+        .group-card { background:rgba(30,30,50,0.8); border:2px solid var(--gc-color, rgba(255,255,255,0.1)); border-radius:12px; padding:0.75rem; transition:all 0.3s; min-height:80px; }
+        .group-card:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(0,0,0,0.3); }
+        .group-card.drag-over-card { border-style:dashed; background:rgba(16,185,129,0.08); box-shadow:0 0 20px rgba(16,185,129,0.2); transform:scale(1.02); }
+        .group-card-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(255,255,255,0.08); }
+        .group-card-dot { width:12px; height:12px; border-radius:50%; background:var(--gc-color); flex-shrink:0; }
+        .group-card-title { font-weight:700; font-size:0.9rem; color:var(--gc-color); cursor:text; }
+        .group-card-title:hover { text-decoration:underline dotted; }
+        .group-card-count { margin-left:auto; font-size:0.7rem; color:#64748b; background:rgba(255,255,255,0.05); padding:0.15rem 0.5rem; border-radius:4px; }
+        .group-card-delete { background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.8rem; opacity:0.4; transition:opacity 0.2s; padding:0 0.3rem; margin-left:0.3rem; }
+        .group-card-delete:hover { opacity:1; }
+        .group-card-members { display:flex; flex-direction:column; gap:0.3rem; min-height:30px; }
+        .group-card-member { padding:0.35rem 0.6rem; background:rgba(255,255,255,0.04); border-radius:6px; font-size:0.8rem; font-weight:500; color:#e2e8f0; transition:all 0.15s; cursor:grab; user-select:none; display:flex; justify-content:space-between; align-items:center; }
+        .group-card-member:hover { background:rgba(255,255,255,0.1); }
+        .group-card-member.dragging-member { opacity:0.4; transform:scale(0.95); }
+        .group-card-member .member-remove { background:none; border:none; color:#94a3b8; cursor:pointer; font-size:0.7rem; opacity:0; transition:opacity 0.15s; padding:0 0.2rem; }
+        .group-card-member:hover .member-remove { opacity:0.6; }
+        .group-card-member .member-remove:hover { opacity:1; color:#ef4444; }
+        .group-unassigned { background:rgba(30,30,50,0.6); border:2px dashed rgba(255,255,255,0.15); border-radius:12px; padding:0.75rem; margin-bottom:0.5rem; }
+        .group-unassigned.drag-over-card { border-color:#f59e0b; background:rgba(245,158,11,0.08); }
+        .group-unassigned-header { font-size:0.75rem; color:#f59e0b; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; }
+        .group-unassigned-members { display:flex; flex-wrap:wrap; gap:0.3rem; min-height:25px; }
+        .group-unassigned-members .group-card-member { cursor:grab; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); }
+        .group-reset-btn { width:100%; padding:0.5rem; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:8px; color:#ef4444; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+        .group-reset-btn:hover { background:rgba(239,68,68,0.25); }
+        .group-name-input { width:100%; padding:0.4rem 0.5rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#f0f0f5; font-size:0.8rem; }
+        .group-name-input:focus { outline:none; border-color:#10b981; }
+        .group-info { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:0.6rem; font-size:0.7rem; color:#94a3b8; line-height:1.5; }
+        .group-info strong { color:#6ee7b7; }
+        .group-toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%) translateY(100px); background:rgba(30,30,50,0.95); border:1px solid rgba(16,185,129,0.3); padding:0.75rem 1.5rem; border-radius:12px; font-weight:600; font-size:0.9rem; color:#6ee7b7; box-shadow:0 10px 40px rgba(0,0,0,0.6); transition:transform 0.3s ease; z-index:1100; }
+        .group-toast.show { transform:translateX(-50%) translateY(0); }
+        #groupToggle.active { background:linear-gradient(135deg,#10b981,#34d399); color:white; box-shadow:0 0 15px rgba(16,185,129,0.4); }
+        @keyframes groupCardIn { from { opacity:0; transform:translateY(10px) scale(0.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+        .group-card { animation: groupCardIn 0.3s ease forwards; }
     </style>
 </head>
 
@@ -1175,6 +1240,9 @@
                 </button>
                 <button id="bankvalToggle" class="btn btn-secondary">
                     <span class="icon">🎯</span> Bänkväljare
+                </button>
+                <button id="groupToggle" class="btn btn-secondary">
+                    <span class="icon">👥</span> Grupper
                 </button>
             </div>
         </header>
@@ -1303,6 +1371,51 @@
         </div>
     </div>
     <div class="bankval-toast" id="bankvalToast"></div>
+
+    <!-- Gruppverktyg Overlay -->
+    <div id="groupOverlay" class="group-overlay">
+        <div class="group-header">
+            <h2>👥 Gruppverktyg <span class="group-class-name" id="groupClassName"></span></h2>
+            <button id="groupClose" class="group-close">✕</button>
+        </div>
+        <div class="group-body">
+            <div class="group-controls">
+                <div class="group-section-label">Skapa grupper</div>
+                <div class="group-input-row">
+                    <label>Metod:</label>
+                    <select id="groupMethod">
+                        <option value="byCount">Antal grupper</option>
+                        <option value="bySize">Elever/grupp</option>
+                    </select>
+                </div>
+                <div class="group-input-row">
+                    <label id="groupValueLabel">Antal:</label>
+                    <input type="number" id="groupValue" value="4" min="2" max="15">
+                </div>
+                <button class="group-generate-btn" id="groupGenerateBtn">🎲 Skapa slumpade grupper</button>
+                <button class="group-add-btn" id="groupStartEmptyBtn">📝 Starta med tomma grupper</button>
+                <button class="group-add-btn" id="groupAddOneBtn" style="background:rgba(99,102,241,0.12);border-color:rgba(99,102,241,0.25);color:#a5b4fc">➕ Lägg till en grupp</button>
+
+                <div class="group-section-label" style="margin-top:0.5rem">Spara / Ladda</div>
+                <input type="text" class="group-name-input" id="groupSaveName" placeholder="Namn (t.ex. Ekologi fältarbete)">
+                <button class="group-save-btn" id="groupSaveBtn">💾 Spara aktuell gruppering</button>
+                <div class="group-saved-list" id="groupSavedList"></div>
+
+                <button class="group-reset-btn" id="groupResetBtn">↻ Rensa grupper</button>
+
+                <div class="group-info">
+                    <strong>🎲 Slumpa:</strong> Fördelar elever slumpmässigt<br>
+                    <strong>📝 Tomma:</strong> Skapar tomma grupper att fylla manuellt<br>
+                    <strong>✋ Dra-och-släpp:</strong> Flytta elever mellan grupper<br>
+                    <strong>💾 Spara:</strong> Grupperingar finns kvar mellan sessioner
+                </div>
+            </div>
+            <div class="group-display" id="groupDisplay">
+                <div class="group-display-empty">Klicka "Skapa slumpade grupper" eller ladda en sparad gruppering</div>
+            </div>
+        </div>
+    </div>
+    <div class="group-toast" id="groupToast"></div>
 
     <script>
         const classData = {
@@ -2203,6 +2316,291 @@
 
         setupBankvalListeners();
         loadBankvalState();
+
+        // === Gruppverktyg Integration ===
+        const GROUP_COLORS = ['#10b981','#6366f1','#f59e0b','#ef4444','#3b82f6','#a855f7','#ec4899','#14b8a6','#f97316','#84cc16','#06b6d4','#e11d4f','#8b5cf6','#22d3ee','#facc15'];
+        let groupActive = false;
+        let groupCurrentGroups = []; // [{name, members:[]}]
+        let groupUnassigned = []; // names not in any group
+        let grpDragName = null;
+        let grpDragFrom = null; // {type:'group'|'unassigned', groupIdx:number}
+
+        function getGroupStorageKey() { return `groups_${currentClass}`; }
+        function loadSavedGroups() { const r = localStorage.getItem(getGroupStorageKey()); return r ? JSON.parse(r) : []; }
+        function saveGroupsToStorage(s) { localStorage.setItem(getGroupStorageKey(), JSON.stringify(s)); }
+
+        function toggleGroupOverlay() {
+            groupActive = !groupActive;
+            const overlay = document.getElementById('groupOverlay');
+            const btn = document.getElementById('groupToggle');
+            if (groupActive) {
+                overlay.classList.add('active');
+                btn.classList.add('active');
+                document.getElementById('groupClassName').textContent = classData[currentClass]?.name || currentClass;
+                renderSavedGroupsList();
+                renderGroupCards();
+            } else {
+                overlay.classList.remove('active');
+                btn.classList.remove('active');
+            }
+        }
+
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+            return a;
+        }
+
+        function getAllStudentNames() { return getPlacedStudents().map(s => s.name); }
+
+        function generateGroups() {
+            const students = getAllStudentNames();
+            if (students.length === 0) { showGroupToast('Inga placerade elever!'); return; }
+            const method = document.getElementById('groupMethod').value;
+            const value = parseInt(document.getElementById('groupValue').value);
+            if (!value || value < 1) { showGroupToast('Ogiltigt värde!'); return; }
+            const shuffled = shuffleArray(students);
+            groupCurrentGroups = [];
+            groupUnassigned = [];
+            if (method === 'byCount') {
+                const n = Math.min(value, shuffled.length);
+                for (let i = 0; i < n; i++) groupCurrentGroups.push({ name: `Grupp ${i + 1}`, members: [] });
+                shuffled.forEach((name, idx) => groupCurrentGroups[idx % n].members.push(name));
+            } else {
+                const per = value; let gi = 0;
+                shuffled.forEach((name, idx) => {
+                    if (idx % per === 0) { gi = groupCurrentGroups.length; groupCurrentGroups.push({ name: `Grupp ${gi + 1}`, members: [] }); }
+                    groupCurrentGroups[gi].members.push(name);
+                });
+            }
+            renderGroupCards();
+            showGroupToast(`${groupCurrentGroups.length} grupper skapade med ${shuffled.length} elever!`);
+        }
+
+        function startEmptyGroups() {
+            const value = parseInt(document.getElementById('groupValue').value);
+            if (!value || value < 1) { showGroupToast('Ange antal grupper!'); return; }
+            groupCurrentGroups = [];
+            for (let i = 0; i < value; i++) groupCurrentGroups.push({ name: `Grupp ${i + 1}`, members: [] });
+            groupUnassigned = getAllStudentNames();
+            renderGroupCards();
+            showGroupToast(`${value} tomma grupper skapade — dra elever till grupper!`);
+        }
+
+        function addOneGroup() {
+            const idx = groupCurrentGroups.length + 1;
+            groupCurrentGroups.push({ name: `Grupp ${idx}`, members: [] });
+            renderGroupCards();
+            showGroupToast(`Grupp ${idx} tillagd!`);
+        }
+
+        function renderGroupCards() {
+            const display = document.getElementById('groupDisplay');
+            if (groupCurrentGroups.length === 0 && groupUnassigned.length === 0) {
+                display.innerHTML = '<div class="group-display-empty">Klicka "Skapa slumpade grupper" eller "Starta med tomma grupper"</div>';
+                return;
+            }
+            let html = '';
+            // Unassigned pool
+            if (groupUnassigned.length > 0) {
+                html += '<div class="group-unassigned" id="grpUnassignedZone">';
+                html += '<div class="group-unassigned-header">📋 Ej tilldelade (' + groupUnassigned.length + ')</div>';
+                html += '<div class="group-unassigned-members">';
+                groupUnassigned.forEach(m => {
+                    html += `<div class="group-card-member" draggable="true" data-name="${m}" data-from="unassigned"><span>${m}</span><button class="member-remove" data-name="${m}" data-from="unassigned" title="Ta bort">✕</button></div>`;
+                });
+                html += '</div></div>';
+            }
+            html += '<div class="group-cards">';
+            groupCurrentGroups.forEach((g, i) => {
+                const color = GROUP_COLORS[i % GROUP_COLORS.length];
+                html += `<div class="group-card" data-group-idx="${i}" style="--gc-color:${color};animation-delay:${i * 0.05}s">`;
+                html += `<div class="group-card-header"><div class="group-card-dot"></div><span class="group-card-title" data-group-idx="${i}" title="Klicka för att byta namn">${g.name}</span><span class="group-card-count">${g.members.length} elever</span><button class="group-card-delete" data-group-idx="${i}" title="Ta bort grupp">🗑️</button></div>`;
+                html += `<div class="group-card-members" data-group-idx="${i}">`;
+                g.members.forEach(m => {
+                    html += `<div class="group-card-member" draggable="true" data-name="${m}" data-from="${i}"><span>${m}</span><button class="member-remove" data-name="${m}" data-from="${i}" title="Flytta till otilldelade">✕</button></div>`;
+                });
+                if (g.members.length === 0) html += '<div style="color:#64748b;font-size:0.7rem;font-style:italic;padding:0.3rem">Dra elever hit</div>';
+                html += '</div></div>';
+            });
+            html += '</div>';
+            display.innerHTML = html;
+            setupGroupDragDrop();
+        }
+
+        function setupGroupDragDrop() {
+            // Member drag start
+            document.querySelectorAll('#groupDisplay .group-card-member[draggable]').forEach(el => {
+                el.addEventListener('dragstart', e => {
+                    grpDragName = el.dataset.name;
+                    grpDragFrom = el.dataset.from;
+                    el.classList.add('dragging-member');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', el.dataset.name);
+                });
+                el.addEventListener('dragend', () => { el.classList.remove('dragging-member'); grpDragName = null; grpDragFrom = null; });
+            });
+            // Group card drop zones
+            document.querySelectorAll('#groupDisplay .group-card').forEach(card => {
+                card.addEventListener('dragover', e => { e.preventDefault(); card.classList.add('drag-over-card'); });
+                card.addEventListener('dragleave', () => card.classList.remove('drag-over-card'));
+                card.addEventListener('drop', e => {
+                    e.preventDefault(); card.classList.remove('drag-over-card');
+                    if (!grpDragName) return;
+                    const targetIdx = parseInt(card.dataset.groupIdx);
+                    moveStudentToGroup(grpDragName, grpDragFrom, targetIdx);
+                });
+            });
+            // Unassigned drop zone
+            const uZone = document.getElementById('grpUnassignedZone');
+            if (uZone) {
+                uZone.addEventListener('dragover', e => { e.preventDefault(); uZone.classList.add('drag-over-card'); });
+                uZone.addEventListener('dragleave', () => uZone.classList.remove('drag-over-card'));
+                uZone.addEventListener('drop', e => {
+                    e.preventDefault(); uZone.classList.remove('drag-over-card');
+                    if (!grpDragName) return;
+                    moveStudentToGroup(grpDragName, grpDragFrom, 'unassigned');
+                });
+            }
+            // Also allow dropping on the display area itself to create unassigned
+            const displayEl = document.getElementById('groupDisplay');
+            displayEl.addEventListener('dragover', e => e.preventDefault());
+            displayEl.addEventListener('drop', e => {
+                if (e.target.closest('.group-card') || e.target.closest('.group-unassigned')) return;
+                e.preventDefault();
+                if (!grpDragName) return;
+                moveStudentToGroup(grpDragName, grpDragFrom, 'unassigned');
+            });
+            // Remove buttons
+            document.querySelectorAll('#groupDisplay .member-remove').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    moveStudentToGroup(btn.dataset.name, btn.dataset.from, 'unassigned');
+                });
+            });
+            // Delete group buttons
+            document.querySelectorAll('#groupDisplay .group-card-delete').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.dataset.groupIdx);
+                    const g = groupCurrentGroups[idx];
+                    if (g) { groupUnassigned.push(...g.members); groupCurrentGroups.splice(idx, 1); renderGroupCards(); showGroupToast(`"${g.name}" borttagen`); }
+                });
+            });
+            // Rename group titles
+            document.querySelectorAll('#groupDisplay .group-card-title').forEach(title => {
+                title.addEventListener('click', () => {
+                    const idx = parseInt(title.dataset.groupIdx);
+                    const g = groupCurrentGroups[idx];
+                    if (!g) return;
+                    const newName = prompt('Nytt gruppnamn:', g.name);
+                    if (newName && newName.trim()) { g.name = newName.trim(); renderGroupCards(); }
+                });
+            });
+        }
+
+        function moveStudentToGroup(name, fromStr, toTarget) {
+            // Remove from source
+            if (fromStr === 'unassigned') {
+                const idx = groupUnassigned.indexOf(name);
+                if (idx > -1) groupUnassigned.splice(idx, 1);
+            } else {
+                const fi = parseInt(fromStr);
+                if (groupCurrentGroups[fi]) {
+                    const idx = groupCurrentGroups[fi].members.indexOf(name);
+                    if (idx > -1) groupCurrentGroups[fi].members.splice(idx, 1);
+                }
+            }
+            // Add to target
+            if (toTarget === 'unassigned') {
+                if (!groupUnassigned.includes(name)) groupUnassigned.push(name);
+            } else {
+                const ti = parseInt(toTarget);
+                if (groupCurrentGroups[ti] && !groupCurrentGroups[ti].members.includes(name)) {
+                    groupCurrentGroups[ti].members.push(name);
+                }
+            }
+            renderGroupCards();
+        }
+
+        function saveCurrentGroups() {
+            if (groupCurrentGroups.length === 0) { showGroupToast('Skapa grupper först!'); return; }
+            const nameInput = document.getElementById('groupSaveName');
+            const name = nameInput.value.trim() || `Gruppering ${new Date().toLocaleDateString('sv-SE')}`;
+            const saved = loadSavedGroups();
+            saved.push({ name, groups: groupCurrentGroups, unassigned: groupUnassigned, created: Date.now() });
+            saveGroupsToStorage(saved);
+            nameInput.value = '';
+            renderSavedGroupsList();
+            showGroupToast(`"${name}" sparad!`);
+        }
+
+        function renderSavedGroupsList() {
+            const container = document.getElementById('groupSavedList');
+            const saved = loadSavedGroups();
+            if (saved.length === 0) { container.innerHTML = ''; return; }
+            container.innerHTML = saved.map((s, i) =>
+                `<div class="group-saved-item" data-idx="${i}"><span>${s.name}</span><button class="group-saved-delete" data-idx="${i}" title="Ta bort">✕</button></div>`
+            ).join('');
+            container.querySelectorAll('.group-saved-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('group-saved-delete')) return;
+                    const idx = parseInt(item.dataset.idx);
+                    const saved = loadSavedGroups();
+                    if (saved[idx]) {
+                        groupCurrentGroups = JSON.parse(JSON.stringify(saved[idx].groups));
+                        groupUnassigned = saved[idx].unassigned ? [...saved[idx].unassigned] : [];
+                        renderGroupCards();
+                        container.querySelectorAll('.group-saved-item').forEach(el => el.classList.remove('active-saved'));
+                        item.classList.add('active-saved');
+                        showGroupToast(`"${saved[idx].name}" laddad!`);
+                    }
+                });
+            });
+            container.querySelectorAll('.group-saved-delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.dataset.idx);
+                    const saved = loadSavedGroups();
+                    const name = saved[idx]?.name;
+                    saved.splice(idx, 1);
+                    saveGroupsToStorage(saved);
+                    renderSavedGroupsList();
+                    showGroupToast(`"${name}" borttagen!`);
+                });
+            });
+        }
+
+        function resetGroups() { groupCurrentGroups = []; groupUnassigned = []; renderGroupCards(); }
+
+        function showGroupToast(msg) {
+            const toast = document.getElementById('groupToast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Group tool event listeners
+        document.getElementById('groupToggle').addEventListener('click', toggleGroupOverlay);
+        document.getElementById('groupClose').addEventListener('click', toggleGroupOverlay);
+        document.getElementById('groupGenerateBtn').addEventListener('click', generateGroups);
+        document.getElementById('groupStartEmptyBtn').addEventListener('click', startEmptyGroups);
+        document.getElementById('groupAddOneBtn').addEventListener('click', addOneGroup);
+        document.getElementById('groupSaveBtn').addEventListener('click', saveCurrentGroups);
+        document.getElementById('groupResetBtn').addEventListener('click', resetGroups);
+        document.getElementById('groupMethod').addEventListener('change', (e) => {
+            document.getElementById('groupValueLabel').textContent = e.target.value === 'byCount' ? 'Antal:' : 'Per grupp:';
+        });
+        classSelect.addEventListener('change', () => {
+            if (groupActive) {
+                setTimeout(() => {
+                    document.getElementById('groupClassName').textContent = classData[currentClass]?.name || currentClass;
+                    groupCurrentGroups = []; groupUnassigned = [];
+                    renderGroupCards(); renderSavedGroupsList();
+                }, 150);
+            }
+        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && groupActive) toggleGroupOverlay(); });
 
         init();
     </script>
