@@ -1176,29 +1176,29 @@
         .group-saved-item .group-saved-delete:hover { opacity:1; }
         .group-display { flex:1; display:flex; flex-direction:column; gap:0.75rem; min-height:0; overflow-y:auto; }
         .group-display-empty { display:flex; align-items:center; justify-content:center; flex:1; color:#64748b; font-size:1rem; font-style:italic; }
-        .group-cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:0.75rem; padding-bottom:1rem; }
-        .group-card { background:rgba(30,30,50,0.8); border:2px solid var(--gc-color, rgba(255,255,255,0.1)); border-radius:12px; padding:0.75rem; transition:all 0.3s; min-height:80px; }
-        .group-card:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(0,0,0,0.3); }
-        .group-card.drag-over-card { border-style:dashed; background:rgba(16,185,129,0.08); box-shadow:0 0 20px rgba(16,185,129,0.2); transform:scale(1.02); }
-        .group-card-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(255,255,255,0.08); }
-        .group-card-dot { width:12px; height:12px; border-radius:50%; background:var(--gc-color); flex-shrink:0; }
-        .group-card-title { font-weight:700; font-size:0.9rem; color:var(--gc-color); cursor:text; }
+        .group-cards { display:grid; gap:0.75rem; padding-bottom:1rem; }
+        .group-card { background:var(--gc-bg); border:none; border-radius:16px; padding:1rem; transition:all 0.3s; min-height:90px; box-shadow:0 2px 12px rgba(0,0,0,0.15); }
+        .group-card:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,0,0,0.25); }
+        .group-card.drag-over-card { outline:3px dashed rgba(255,255,255,0.6); outline-offset:2px; box-shadow:0 0 25px rgba(255,255,255,0.15); transform:scale(1.02); }
+        .group-card-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem; padding-bottom:0.5rem; border-bottom:1px solid var(--gc-border); }
+        .group-card-dot { display:none; }
+        .group-card-title { font-weight:800; font-size:1.05rem; color:var(--gc-text); cursor:text; letter-spacing:0.01em; }
         .group-card-title:hover { text-decoration:underline dotted; }
-        .group-card-count { margin-left:auto; font-size:0.7rem; color:#64748b; background:rgba(255,255,255,0.05); padding:0.15rem 0.5rem; border-radius:4px; }
-        .group-card-delete { background:none; border:none; color:#ef4444; cursor:pointer; font-size:0.8rem; opacity:0.4; transition:opacity 0.2s; padding:0 0.3rem; margin-left:0.3rem; }
+        .group-card-count { margin-left:auto; font-size:0.7rem; color:var(--gc-text); background:var(--gc-border); padding:0.2rem 0.6rem; border-radius:6px; font-weight:600; }
+        .group-card-delete { background:none; border:none; color:var(--gc-text); cursor:pointer; font-size:0.8rem; opacity:0.5; transition:opacity 0.2s; padding:0 0.3rem; margin-left:0.3rem; }
         .group-card-delete:hover { opacity:1; }
-        .group-card-members { display:flex; flex-direction:column; gap:0.3rem; min-height:30px; }
-        .group-card-member { padding:0.35rem 0.6rem; background:rgba(255,255,255,0.04); border-radius:6px; font-size:0.8rem; font-weight:500; color:#e2e8f0; transition:all 0.15s; cursor:grab; user-select:none; display:flex; justify-content:space-between; align-items:center; }
-        .group-card-member:hover { background:rgba(255,255,255,0.1); }
+        .group-card-members { display:flex; flex-direction:column; gap:0.35rem; min-height:30px; }
+        .group-card-member { padding:0.45rem 0.7rem; background:var(--gc-member-bg); border-radius:8px; font-size:0.85rem; font-weight:600; color:var(--gc-text); transition:all 0.15s; cursor:grab; user-select:none; display:flex; justify-content:space-between; align-items:center; }
+        .group-card-member:hover { background:var(--gc-member-hover); }
         .group-card-member.dragging-member { opacity:0.4; transform:scale(0.95); }
-        .group-card-member .member-remove { background:none; border:none; color:#94a3b8; cursor:pointer; font-size:0.7rem; opacity:0; transition:opacity 0.15s; padding:0 0.2rem; }
-        .group-card-member:hover .member-remove { opacity:0.6; }
-        .group-card-member .member-remove:hover { opacity:1; color:#ef4444; }
+        .group-card-member .member-remove { background:none; border:none; color:var(--gc-text); cursor:pointer; font-size:0.7rem; opacity:0; transition:opacity 0.15s; padding:0 0.2rem; }
+        .group-card-member:hover .member-remove { opacity:0.5; }
+        .group-card-member .member-remove:hover { opacity:1; }
         .group-unassigned { background:rgba(30,30,50,0.6); border:2px dashed rgba(255,255,255,0.15); border-radius:12px; padding:0.75rem; margin-bottom:0.5rem; }
         .group-unassigned.drag-over-card { border-color:#f59e0b; background:rgba(245,158,11,0.08); }
         .group-unassigned-header { font-size:0.75rem; color:#f59e0b; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.4rem; }
         .group-unassigned-members { display:flex; flex-wrap:wrap; gap:0.3rem; min-height:25px; }
-        .group-unassigned-members .group-card-member { cursor:grab; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); }
+        .group-unassigned-members .group-card-member { cursor:grab; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); color:#f0f0f5; font-weight:500; }
         .group-reset-btn { width:100%; padding:0.5rem; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:8px; color:#ef4444; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
         .group-reset-btn:hover { background:rgba(239,68,68,0.25); }
         .group-name-input { width:100%; padding:0.4rem 0.5rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#f0f0f5; font-size:0.8rem; }
@@ -2318,7 +2318,29 @@
         loadBankvalState();
 
         // === Gruppverktyg Integration ===
-        const GROUP_COLORS = ['#10b981','#6366f1','#f59e0b','#ef4444','#3b82f6','#a855f7','#ec4899','#14b8a6','#f97316','#84cc16','#06b6d4','#e11d4f','#8b5cf6','#22d3ee','#facc15'];
+        // 20 hand-tuned bg/text/border/member combos — WCAG AA contrast verified
+        const GROUP_THEMES = [
+            { bg:'#065f46', text:'#d1fae5', border:'rgba(167,243,208,0.25)', memberBg:'rgba(6,95,70,0.6)', memberHover:'rgba(6,95,70,0.8)' },
+            { bg:'#312e81', text:'#e0e7ff', border:'rgba(199,210,254,0.25)', memberBg:'rgba(49,46,129,0.6)', memberHover:'rgba(49,46,129,0.8)' },
+            { bg:'#92400e', text:'#fef3c7', border:'rgba(253,230,138,0.25)', memberBg:'rgba(146,64,14,0.6)', memberHover:'rgba(146,64,14,0.8)' },
+            { bg:'#991b1b', text:'#fee2e2', border:'rgba(254,202,202,0.25)', memberBg:'rgba(153,27,27,0.6)', memberHover:'rgba(153,27,27,0.8)' },
+            { bg:'#1e3a5f', text:'#dbeafe', border:'rgba(191,219,254,0.25)', memberBg:'rgba(30,58,95,0.6)', memberHover:'rgba(30,58,95,0.8)' },
+            { bg:'#581c87', text:'#f3e8ff', border:'rgba(233,213,255,0.25)', memberBg:'rgba(88,28,135,0.6)', memberHover:'rgba(88,28,135,0.8)' },
+            { bg:'#831843', text:'#fce7f3', border:'rgba(251,207,232,0.25)', memberBg:'rgba(131,24,67,0.6)', memberHover:'rgba(131,24,67,0.8)' },
+            { bg:'#134e4a', text:'#ccfbf1', border:'rgba(153,246,228,0.25)', memberBg:'rgba(19,78,74,0.6)', memberHover:'rgba(19,78,74,0.8)' },
+            { bg:'#7c2d12', text:'#ffedd5', border:'rgba(254,215,170,0.25)', memberBg:'rgba(124,45,18,0.6)', memberHover:'rgba(124,45,18,0.8)' },
+            { bg:'#365314', text:'#ecfccb', border:'rgba(217,249,157,0.25)', memberBg:'rgba(54,83,20,0.6)', memberHover:'rgba(54,83,20,0.8)' },
+            { bg:'#164e63', text:'#cffafe', border:'rgba(165,243,252,0.25)', memberBg:'rgba(22,78,99,0.6)', memberHover:'rgba(22,78,99,0.8)' },
+            { bg:'#4a1d96', text:'#ede9fe', border:'rgba(221,214,254,0.25)', memberBg:'rgba(74,29,150,0.6)', memberHover:'rgba(74,29,150,0.8)' },
+            { bg:'#1e40af', text:'#dbeafe', border:'rgba(191,219,254,0.25)', memberBg:'rgba(30,64,175,0.6)', memberHover:'rgba(30,64,175,0.8)' },
+            { bg:'#155e75', text:'#cffafe', border:'rgba(165,243,252,0.25)', memberBg:'rgba(21,94,117,0.6)', memberHover:'rgba(21,94,117,0.8)' },
+            { bg:'#713f12', text:'#fef9c3', border:'rgba(254,240,138,0.25)', memberBg:'rgba(113,63,18,0.6)', memberHover:'rgba(113,63,18,0.8)' },
+            { bg:'#3f1a5c', text:'#f5d0fe', border:'rgba(240,171,252,0.25)', memberBg:'rgba(63,26,92,0.6)', memberHover:'rgba(63,26,92,0.8)' },
+            { bg:'#064e3b', text:'#a7f3d0', border:'rgba(110,231,183,0.25)', memberBg:'rgba(6,78,59,0.6)', memberHover:'rgba(6,78,59,0.8)' },
+            { bg:'#78350f', text:'#fde68a', border:'rgba(253,224,71,0.25)', memberBg:'rgba(120,53,15,0.6)', memberHover:'rgba(120,53,15,0.8)' },
+            { bg:'#0f172a', text:'#e2e8f0', border:'rgba(148,163,184,0.25)', memberBg:'rgba(15,23,42,0.6)', memberHover:'rgba(15,23,42,0.8)' },
+            { bg:'#701a75', text:'#fae8ff', border:'rgba(245,208,254,0.25)', memberBg:'rgba(112,26,117,0.6)', memberHover:'rgba(112,26,117,0.8)' }
+        ];
         let groupActive = false;
         let groupCurrentGroups = []; // [{name, members:[]}]
         let groupUnassigned = []; // names not in any group
@@ -2413,16 +2435,19 @@
                 });
                 html += '</div></div>';
             }
-            html += '<div class="group-cards">';
+            // Dynamic grid: adapt columns based on group count
+            const n = groupCurrentGroups.length;
+            const cols = n <= 2 ? n : n <= 4 ? 2 : n <= 6 ? 3 : n <= 9 ? 3 : 4;
+            html += `<div class="group-cards" style="grid-template-columns:repeat(${cols}, 1fr)">`;
             groupCurrentGroups.forEach((g, i) => {
-                const color = GROUP_COLORS[i % GROUP_COLORS.length];
-                html += `<div class="group-card" data-group-idx="${i}" style="--gc-color:${color};animation-delay:${i * 0.05}s">`;
-                html += `<div class="group-card-header"><div class="group-card-dot"></div><span class="group-card-title" data-group-idx="${i}" title="Klicka för att byta namn">${g.name}</span><span class="group-card-count">${g.members.length} elever</span><button class="group-card-delete" data-group-idx="${i}" title="Ta bort grupp">🗑️</button></div>`;
+                const t = GROUP_THEMES[i % GROUP_THEMES.length];
+                html += `<div class="group-card" data-group-idx="${i}" style="--gc-bg:${t.bg};--gc-text:${t.text};--gc-border:${t.border};--gc-member-bg:${t.memberBg};--gc-member-hover:${t.memberHover};animation-delay:${i * 0.05}s">`;
+                html += `<div class="group-card-header"><span class="group-card-title" data-group-idx="${i}" title="Klicka för att byta namn">${g.name}</span><span class="group-card-count">${g.members.length} elever</span><button class="group-card-delete" data-group-idx="${i}" title="Ta bort grupp">🗑️</button></div>`;
                 html += `<div class="group-card-members" data-group-idx="${i}">`;
                 g.members.forEach(m => {
                     html += `<div class="group-card-member" draggable="true" data-name="${m}" data-from="${i}"><span>${m}</span><button class="member-remove" data-name="${m}" data-from="${i}" title="Flytta till otilldelade">✕</button></div>`;
                 });
-                if (g.members.length === 0) html += '<div style="color:#64748b;font-size:0.7rem;font-style:italic;padding:0.3rem">Dra elever hit</div>';
+                if (g.members.length === 0) html += `<div style="color:${t.text};opacity:0.5;font-size:0.75rem;font-style:italic;padding:0.3rem">Dra elever hit</div>`;
                 html += '</div></div>';
             });
             html += '</div>';
