@@ -2337,6 +2337,8 @@
                 overlay.classList.add('active');
                 btn.classList.add('active');
                 document.getElementById('groupClassName').textContent = classData[currentClass]?.name || currentClass;
+                groupCurrentGroups = [];
+                groupUnassigned = [];
                 renderSavedGroupsList();
                 renderGroupCards();
             } else {
@@ -2592,10 +2594,10 @@
             document.getElementById('groupValueLabel').textContent = e.target.value === 'byCount' ? 'Antal:' : 'Per grupp:';
         });
         classSelect.addEventListener('change', () => {
+            groupCurrentGroups = []; groupUnassigned = [];
             if (groupActive) {
                 setTimeout(() => {
                     document.getElementById('groupClassName').textContent = classData[currentClass]?.name || currentClass;
-                    groupCurrentGroups = []; groupUnassigned = [];
                     renderGroupCards(); renderSavedGroupsList();
                 }, 150);
             }
